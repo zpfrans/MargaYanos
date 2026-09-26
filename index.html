@@ -1,2537 +1,961 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import {
-  Sparkles,
-  Calendar,
-  Clock,
-  TrendingUp,
-  CheckCircle2,
-  ArrowRight,
-  Download,
-  Mail,
-  Instagram,
-  Linkedin,
-  Send,
-  Sliders,
-  DollarSign,
-  Briefcase,
-  Award,
-  Layers,
-  Star,
-  ExternalLink,
-  ChevronRight,
-  Filter,
-  Eye,
-  MessageCircle,
-  Share2,
-  Check,
-  Zap,
-  Coffee,
-  Bookmark,
-  Heart,
-  ChevronDown,
-  Globe,
-  Flame,
-  X,
-  Volume2,
-  VolumeX,
-  Palette,
-  FileText,
-  PieChart,
-  HelpCircle,
-  Menu,
-  PhoneCall,
-  Search,
-  CheckCheck,
-  Plane,
-  Inbox,
-  LayoutGrid,
-  Maximize2,
-  Repeat,
-  ShieldCheck,
-  ChevronLeft,
-  Smartphone
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marga Yanos | Social Media Manager & Executive VA</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-const THEMES = {
-  vibrant: {
-    id: 'vibrant',
-    name: 'Neon Sunset',
-    accent: 'from-pink-500 via-rose-500 to-amber-500',
-    primaryBorder: 'border-pink-500/30',
-    pillBg: 'bg-pink-500/10 text-pink-300 border-pink-500/30',
-    cardGlow: 'hover:shadow-[0_0_35px_rgba(244,63,94,0.25)]',
-    blob1: 'bg-gradient-to-r from-pink-500/25 to-rose-500/20',
-    blob2: 'bg-gradient-to-r from-violet-600/25 to-indigo-500/20',
-    blob3: 'bg-gradient-to-r from-amber-400/25 to-orange-500/20',
-    badgeGradient: 'from-pink-500 to-amber-500'
-  },
-  aurora: {
-    id: 'aurora',
-    name: 'Cosmic Violet',
-    accent: 'from-purple-500 via-indigo-500 to-teal-400',
-    primaryBorder: 'border-purple-500/30',
-    pillBg: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
-    cardGlow: 'hover:shadow-[0_0_35px_rgba(168,85,247,0.25)]',
-    blob1: 'bg-gradient-to-r from-purple-600/25 to-cyan-500/20',
-    blob2: 'bg-gradient-to-r from-indigo-500/25 to-fuchsia-500/20',
-    blob3: 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20',
-    badgeGradient: 'from-purple-500 to-cyan-400'
-  },
-  emerald: {
-    id: 'emerald',
-    name: 'Cyber Emerald',
-    accent: 'from-emerald-400 via-teal-500 to-cyan-500',
-    primaryBorder: 'border-emerald-500/30',
-    pillBg: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
-    cardGlow: 'hover:shadow-[0_0_35px_rgba(16,185,129,0.25)]',
-    blob1: 'bg-gradient-to-r from-emerald-500/25 to-teal-500/20',
-    blob2: 'bg-gradient-to-r from-cyan-600/25 to-blue-500/20',
-    blob3: 'bg-gradient-to-r from-teal-400/25 to-emerald-500/20',
-    badgeGradient: 'from-emerald-400 to-teal-400'
-  },
-  candy: {
-    id: 'candy',
-    name: 'Electric Candy',
-    accent: 'from-sky-400 via-pink-400 to-amber-400',
-    primaryBorder: 'border-sky-500/30',
-    pillBg: 'bg-sky-500/10 text-sky-300 border-sky-500/30',
-    cardGlow: 'hover:shadow-[0_0_35px_rgba(56,189,248,0.25)]',
-    blob1: 'bg-gradient-to-r from-sky-400/25 to-indigo-400/20',
-    blob2: 'bg-gradient-to-r from-pink-400/25 to-amber-400/20',
-    blob3: 'bg-gradient-to-r from-violet-400/20 to-rose-400/20',
-    badgeGradient: 'from-sky-400 to-pink-400'
-  }
-};
-
-const CASE_STUDIES = [
-  {
-    id: 'luxe-fashion',
-    category: 'Instagram Growth',
-    title: 'Aura Collective Apparel: 340% Reach Lift',
-    subtitle: 'High-converting aesthetic rebranding & short-form video takeover',
-    client: 'Aura Collective (Direct-to-Consumer Boutique)',
-    period: '4-Month Retainer',
-    heroMetric: '+340% Reach',
-    stats: [
-      { label: 'Follower Gain', val: '+24.8K', delta: '+180%' },
-      { label: 'Avg Reel Views', val: '86.4K', delta: '4.8x' },
-      { label: 'Bio Link CTR', val: '8.4%', delta: '+3.1%' },
-      { label: 'Shop Direct GMV', val: '$42,500', delta: '+120%' }
-    ],
-    tags: ['Reels Strategy', 'Canva Pro Aesthetic', 'Meta Analytics', 'Hashtag Architecture'],
-    overview: 'Aura Collective had stagnant engagement, disjointed branding, and sub-1% bio link conversions. Marga orchestrated a complete aesthetic transformation, scripted high-retention 7-second Reels, and introduced rapid 15-minute community DM funnels.',
-    deliverables: [
-      'Daily curated carousel slides and short-form Reels with kinetic captions',
-      'Community inbound engagement & automated DM sales triage under 15 minutes',
-      'Micro-influencer gifting campaign managing 35 creator shipments & assets',
-      'Bi-weekly executive KPI audit reports tracking attribution in Google Sheets'
-    ],
-    highlightImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80',
-    color: 'from-pink-500 to-rose-600'
-  },
-  {
-    id: 'saas-founder-va',
-    category: 'Virtual Assistance',
-    title: 'B2B Founder Automation: 22 Hrs/Wk Freed',
-    subtitle: 'Executive inbox zero, Asana pipeline, and calendar mastery',
-    client: 'DevScale Inc. (Seed-stage B2B SaaS CEO)',
-    period: 'Ongoing (8 Months)',
-    heroMetric: '22h/Wk Saved',
-    stats: [
-      { label: 'Inbox Clean Rate', val: '100%', delta: 'Twice Daily' },
-      { label: 'Meeting Conflicts', val: '0', delta: '-100%' },
-      { label: 'Weekly Hours Restored', val: '22 Hrs', delta: '4x ROI' },
-      { label: 'Notion Ops Playbook', val: '14 SOPs', delta: 'Standardized' }
-    ],
-    tags: ['Calendar Triage', 'Inbox Zero', 'Asana / ClickUp', 'Notion SOPs', 'Loom Briefs'],
-    overview: 'The CEO was drowning in 150+ daily emails, double-booked pitch meetings across global timezones, and delayed investor follow-ups. Marga implemented an executive triage system, automated calendar booking rules, and standard operating procedures.',
-    deliverables: [
-      'Inbox Zero triage twice daily with personalized VIP draft responses',
-      'Global timezone scheduling coordination spanning US, Europe, and Asia',
-      'Weekly podcast & investor guest booking briefs with research notes',
-      'Quarterly business expense tracking and receipt reconciliation'
-    ],
-    highlightImage: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80',
-    color: 'from-purple-500 to-indigo-600'
-  },
-  {
-    id: 'wellness-viral-reels',
-    category: 'TikTok & Reels',
-    title: 'PureMind Wellness: 1.4M Viral Series',
-    subtitle: 'Educational carousel & hook-driven wellness shorts',
-    client: 'PureMind Lifestyle & Coaching',
-    period: '6-Week Blitz',
-    heroMetric: '1.4M Impressions',
-    stats: [
-      { label: 'Viral Views', val: '1,420,000', delta: 'Top 1%' },
-      { label: 'Email Newsletter Leads', val: '+3,820', delta: '+290%' },
-      { label: 'Save & Share Rate', val: '14.2%', delta: '+9.4%' },
-      { label: 'Course Waitlist Signups', val: '950+', delta: '+410%' }
-    ],
-    tags: ['CapCut Pro', 'Hook Copywriting', 'TikTok SEO', 'Audio Curation', 'Lead Magnet Funnel'],
-    overview: 'PureMind sought to position their founder as the premier authority in burnout recovery. Marga scripted 30 psychological hook openings, matched rhythmic trending audio, and instituted automated DM keyword funnels.',
-    deliverables: [
-      'Scripting and storyboarding 30 short-form video hooks with viral pacing',
-      'CapCut kinetic subtitles, B-roll overlay stitching, and sound effects',
-      'TikTok and Instagram keyword SEO optimization for top ranking',
-      'ManyChat keyword trigger setup directing traffic to high-converting lead magnets'
-    ],
-    highlightImage: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=900&q=80',
-    color: 'from-amber-500 to-emerald-500'
-  },
-  {
-    id: 'community-vip',
-    category: 'Community Management',
-    title: 'NextGen Creators: 98% Retention Rate',
-    subtitle: 'Private community moderation, event hosting & member onboarding',
-    client: 'NextGen Mastermind (300+ Paid Members)',
-    period: '6 Months',
-    heroMetric: '98% Retention',
-    stats: [
-      { label: 'Response Time', val: '< 12 Mins', delta: 'Rapid' },
-      { label: 'Live Attendance', val: '82%', delta: '+24%' },
-      { label: 'Weekly Active Rate', val: '74%', delta: '+18%' },
-      { label: 'NPS Client Score', val: '9.6/10', delta: '+1.4' }
-    ],
-    tags: ['Slack Ops', 'Event Management', 'Member Concierge', 'Stripe Tracking'],
-    overview: 'Managed 300+ entrepreneurial members inside private Slack and Circle channels, producing interactive weekly discussion threads, organizing Zoom workshops, and addressing member billing inquires.',
-    deliverables: [
-      'Personalized welcome onboarding experience for all newly joined members',
-      'Weekly interactive community prompts generating hundreds of active replies',
-      'End-to-end technical coordination of live guest expert webinars on Zoom',
-      'Proactive member check-ins mitigating churn and boosting renewal rates'
-    ],
-    highlightImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80',
-    color: 'from-cyan-500 to-blue-600'
-  }
-];
-
-const EXPERIENCE_TIMELINE = [
-  {
-    year: '2023 - Present',
-    role: 'Lead Social Strategist & Executive Operations VA',
-    company: 'Independent Contractor / Studio Partner',
-    location: 'Remote (US, UK, Australia & Global Clients)',
-    type: 'Full-time & Retainer',
-    summary: 'Partnering directly with agency founders, digital creators, and executive teams to build multi-platform presence while governing daily business logistics.',
-    achievements: [
-      'Scaled combined client accounts past 10 Million organic impressions across Instagram and TikTok in 2023-2024.',
-      'Constructed automated Notion & Asana onboarding workflows reducing client ramp-up time by 60%.',
-      'Orchestrated 6-figure sponsored brand partnership deliverables, creator agreements, and asset approvals with zero delays.'
-    ],
-    badge: 'Current Senior Role',
-    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-  },
-  {
-    year: '2021 - 2023',
-    role: 'Senior Social Media Manager & Content Producer',
-    company: 'Elevate Media Collective',
-    location: 'Remote / Agency',
-    type: 'Agency Retainer',
-    summary: 'Supervised short-form video creation and community engagement for 8 simultaneous multi-niche accounts spanning fashion, SaaS, and wellness.',
-    achievements: [
-      'Boosted client average engagement rate from 1.2% to 4.9% via data-informed reel iterations and visual brand kits.',
-      'Developed internal standardized CapCut templates producing 40+ edited videos weekly for high-tempo distribution.',
-      'Mentored junior virtual assistants in outbound engagement, DM conversion funnels, and analytics audits.'
-    ],
-    badge: 'Agency Era',
-    badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-500/40'
-  },
-  {
-    year: '2020 - 2021',
-    role: 'Executive Virtual Assistant & Operations Coordinator',
-    company: 'Nexus Creative Partners',
-    location: 'Remote',
-    type: 'Contract',
-    summary: 'Provided white-glove executive assistance to the Managing Director, governing multi-timezone calendars, inbox hygiene, and presentation decks.',
-    achievements: [
-      'Authored 25+ comprehensive Standard Operating Procedures (SOPs) hosted in Notion for company-wide onboarding.',
-      'Maintained 100% calendar accuracy across 5 global timezones with zero conflicting appointments.',
-      'Managed end-to-end flight, hotel, and speaking engagement travel itineraries for international executive conferences.'
-    ],
-    badge: 'Operations Lead',
-    badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
-  }
-];
-
-const SKILL_CATEGORIES = [
-  {
-    category: 'Social Media Strategy & Content',
-    skills: [
-      { name: 'Instagram Growth & Feed Aesthetic', level: 98, highlight: 'Aesthetic harmony & carousel hooks' },
-      { name: 'Short-Form Video (TikTok & Reels)', level: 95, highlight: 'High-retention storytelling & pacing' },
-      { name: 'Multi-Channel Calendar Planning', level: 96, highlight: 'Consistent multi-week pipelines' },
-      { name: 'Meta & TikTok Ads & Insights', level: 90, highlight: 'Data-driven pivot testing' },
-      { name: 'Community Care & DM Sales Funnels', level: 94, highlight: 'Warm lead qualification' }
-    ]
-  },
-  {
-    category: 'Executive Virtual Assistance',
-    skills: [
-      { name: 'Daily Inbox Triage (Zero-Inbox)', level: 99, highlight: 'Priority tagging & draft drafting' },
-      { name: 'Multi-Timezone Calendar Management', level: 98, highlight: 'Conflict-free global coordination' },
-      { name: 'Notion Systems & SOP Architecture', level: 95, highlight: 'Organized self-running workspaces' },
-      { name: 'Project Boards (Asana / ClickUp / Trello)', level: 93, highlight: 'Task dependencies & sprint tracking' },
-      { name: 'High-EQ Client & Creator Concierge', level: 96, highlight: 'Discreet, polished communication' }
-    ]
-  },
-  {
-    category: 'Software Ecosystem & Creative Suite',
-    skills: [
-      { name: 'Canva Pro Design & Brand Kits', level: 98, highlight: 'High-conversion carousel layouts' },
-      { name: 'CapCut Video Editing & Subtitles', level: 94, highlight: 'Audio trend synchronization' },
-      { name: 'Google Workspace & MS Office 365', level: 97, highlight: 'Executive spreadsheets & decks' },
-      { name: 'ManyChat & Automation Integrations', level: 89, highlight: 'Lead magnet automated triggers' },
-      { name: 'Slack, Discord & Loom Operations', level: 95, highlight: 'Async communication clarity' }
-    ]
-  }
-];
-
-const BASE_PACKAGES = [
-  {
-    id: 'starter',
-    name: 'Social Launch & Core VA',
-    price: 950,
-    period: '/month',
-    tagline: 'Ideal for solo creators and busy coaches seeking dependable baseline presence.',
-    features: [
-      '12 Curated Instagram/TikTok Posts or Reels per month',
-      'Custom Canva Pro graphics with on-brand typography',
-      '5 Hours/week executive administrative & inbox support',
-      'Daily 30-min community interaction & comment replies',
-      'Monthly performance analytics breakdown'
-    ],
-    popular: false,
-    color: 'border-pink-500/30 bg-pink-500/5'
-  },
-  {
-    id: 'growth',
-    name: 'Growth Accelerate & Ops Partner',
-    price: 1850,
-    period: '/month',
-    tagline: 'Best for expanding brands looking to aggressively scale engagement and reclaim CEO time.',
-    features: [
-      '20 High-impact Short-Form Reels & Carousels per month',
-      'Trend-jacking viral audio research & hook copywriting',
-      '15 Hours/week Executive VA (Calendar, Inbox, Client CRM)',
-      'Asana / ClickUp project coordination & sprint tracking',
-      'Weekly analytics review + live strategy pivot call',
-      'Automated ManyChat DM lead generation sequence setup'
-    ],
-    popular: true,
-    color: 'border-rose-500 bg-rose-500/10 shadow-[0_0_30px_rgba(244,63,94,0.2)]'
-  },
-  {
-    id: 'vip',
-    name: 'VIP Executive Studio Suite',
-    price: 2950,
-    period: '/month',
-    tagline: 'White-glove 360° social dominance and comprehensive right-hand operations.',
-    features: [
-      '30 Multi-platform posts (Instagram, TikTok, LinkedIn, YouTube Shorts)',
-      'Full short-form video editing (subtitles, B-roll, SFX)',
-      '25 Hours/week dedicated Executive Virtual Assistant',
-      'Complete Notion Business Operating System architecture',
-      'VIP priority Slack access & urgent same-day turnaround',
-      'Micro-influencer PR seeding and outreach management'
-    ],
-    popular: false,
-    color: 'border-amber-500/40 bg-amber-500/5'
-  }
-];
-
-const AESTHETIC_POSTS = [
-  {
-    id: 1,
-    type: 'reel',
-    title: 'The 3-Second Hook That 10xed Our Client Reach',
-    views: '124.5K',
-    likes: '14.2K',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-    caption: 'Stop starting your reels with "Hey guys!" Here are 3 psychological hooks we test on client accounts weekly...'
-  },
-  {
-    id: 2,
-    type: 'carousel',
-    title: 'Executive Notion Dashboard Tour',
-    views: '45.1K',
-    likes: '6.8K',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80',
-    caption: 'Swipe to see how we turned 40 disorganized Slack channels into a clean 1-page daily briefing workspace.'
-  },
-  {
-    id: 3,
-    type: 'reel',
-    title: '5 In-Demand Tools Every CEO Needs in 2026',
-    views: '89.3K',
-    likes: '9.4K',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80',
-    caption: 'If your VA is not automating these 5 workflows, you are leaving 15 hours on the table every week.'
-  },
-  {
-    id: 4,
-    type: 'photo',
-    title: 'Minimalist Clean Brand Identity Kit',
-    views: '32.6K',
-    likes: '4.1K',
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80',
-    caption: 'Color psychology in luxury fashion: how soft warm tones increased bio click-through by 3.1%.'
-  },
-  {
-    id: 5,
-    type: 'reel',
-    title: 'Zero-Inbox in 15 Minutes Daily Routine',
-    views: '210.8K',
-    likes: '28.9K',
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80',
-    caption: 'The VIP triage filter matrix I use to keep founders from ever opening 90% of cold marketing emails.'
-  },
-  {
-    id: 6,
-    type: 'carousel',
-    title: 'Monthly Analytics Audit Template',
-    views: '54.2K',
-    likes: '7.3K',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80',
-    caption: 'Metrics that actually matter vs vanity metrics: what we report to founders every second Monday.'
-  }
-];
-
-const FAQS = [
-  {
-    category: 'Operations',
-    q: 'How do you handle time zone differences with global clients?',
-    a: 'I am based in Manila (UTC+8) and provide flexible daily overlaps with US Eastern (EST), US Pacific (PST), London (BST), and Australian (AEST) business hours. We coordinate high-priority calls and live triage during our synchronized window, while async tools (Loom, Slack, Notion) keep work moving seamlessly 24/7.'
-  },
-  {
-    category: 'Operations',
-    q: 'How do you safeguard confidential passwords and sensitive data?',
-    a: 'Security and discretion are non-negotiable. I use 1Password and LastPass for encrypted credential sharing, sign strict Non-Disclosure Agreements (NDAs) prior to onboarding, and use 2-Factor Authentication (2FA) on all devices and client portals.'
-  },
-  {
-    category: 'Social Media',
-    q: 'Do you create the video content, or do I need to send footage?',
-    a: 'We operate on a collaborative hybrid model. You can either supply raw smartphone B-roll/talking-head videos via Google Drive, or I can generate high-converting text hooks, curated visual carousels, and licensed aesthetic B-roll with kinetic typography and trending audio.'
-  },
-  {
-    category: 'Onboarding & Pricing',
-    q: 'Is there a minimum commitment or contract lock-in?',
-    a: 'Retainers begin with an initial 30-day trial period to ensure our workflow and chemistry are aligned. After month one, retainers operate on a flexible month-to-month basis with a standard 14-day notice period.'
-  },
-  {
-    category: 'Social Media',
-    q: 'Can you handle outbound DM lead generation without sounding like a bot?',
-    a: 'Yes! High-EQ communication is my priority. Every inbound message and comment is answered warmly and authentically in your brand tone of voice. We use ManyChat only for instant keyword link triggers, while conversations are handled by human touch.'
-  },
-  {
-    category: 'Operations',
-    q: 'What does the onboarding process look like once we sign?',
-    a: 'Onboarding takes 48 hours. We conduct a 45-minute discovery kickoff, grant tool access via 1Password, import your brand kit and asset drive, and publish your first 2-week approved content calendar within 4 business days.'
-  }
-];
-
-export default function App() {
-  const [currentTab, setCurrentTab] = useState('home');
-  const [themeKey, setThemeKey] = useState('vibrant');
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
-  const [showResumeModal, setShowResumeModal] = useState(false);
-  const [copiedNotification, setCopiedNotification] = useState(false);
-  const [confettiActive, setConfettiActive] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDeliverableTab, setActiveDeliverableTab] = useState('calendar');
-
-  // Before vs After Slider State
-  const [comparisonMode, setComparisonMode] = useState('workspace'); // 'workspace' | 'social'
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const sliderRef = useRef(null);
-  const [isDraggingSlider, setIsDraggingSlider] = useState(false);
-
-  // Rate Customizer
-  const [customTier, setCustomTier] = useState('growth');
-  const [addonEmailTriage, setAddonEmailTriage] = useState(true);
-  const [addonReelBatch, setAddonReelBatch] = useState(true);
-  const [addonNotionSOP, setAddonNotionSOP] = useState(false);
-  const [addonInfluencerPR, setAddonInfluencerPR] = useState(false);
-
-  // ROI Calculator
-  const [founderHoursWaste, setFounderHoursWaste] = useState(15);
-  const [founderHourlyRate, setFounderHourlyRate] = useState(125);
-  const [currentMonthlyFollowers, setCurrentMonthlyFollowers] = useState(4500);
-
-  // Contact & Booking Form
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    serviceNeeded: 'Combined Growth + Ops Suite',
-    monthlyBudget: '$1,850/mo (Growth Retainer)',
-    discoveryDate: '',
-    message: ''
-  });
-
-  // Selected Aesthetic Post Modal
-  const [selectedAestheticPost, setSelectedAestheticPost] = useState(null);
-
-  // FAQ state
-  const [faqCategory, setFaqCategory] = useState('All');
-  const [openFaqIndex, setOpenFaqIndex] = useState(0);
-  const [faqSearchQuery, setFaqSearchQuery] = useState('');
-
-  // Floating Quick Contact FAB
-  const [fabOpen, setFabOpen] = useState(false);
-
-  // Real-time Clock State
-  const [currentUtcDate, setCurrentUtcDate] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentUtcDate(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const activeTheme = THEMES[themeKey];
-
-  const playTactilePop = (frequency = 580, duration = 0.08) => {
-    if (!soundEnabled) return;
-    try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(frequency * 1.45, audioCtx.currentTime + duration);
-      gain.gain.setValueAtTime(0.09, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    } catch {
-      // Audio fallback
-    }
-  };
-
-  const triggerConfetti = () => {
-    setConfettiActive(true);
-    playTactilePop(750, 0.18);
-    setTimeout(() => setConfettiActive(false), 3500);
-  };
-
-  const handleCopyEmail = () => {
-    playTactilePop(640);
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText('marga.yanos.biz@gmail.com');
-    }
-    setCopiedNotification(true);
-    setTimeout(() => setCopiedNotification(false), 2400);
-  };
-
-  const calculatedCustomPrice = useMemo(() => {
-    const base = BASE_PACKAGES.find(p => p.id === customTier)?.price || 1850;
-    let add = 0;
-    if (addonEmailTriage) add += 250;
-    if (addonReelBatch) add += 400;
-    if (addonNotionSOP) add += 350;
-    if (addonInfluencerPR) add += 500;
-    return base + add;
-  }, [customTier, addonEmailTriage, addonReelBatch, addonNotionSOP, addonInfluencerPR]);
-
-  const roiCalculations = useMemo(() => {
-    const weeklyValueLost = founderHoursWaste * founderHourlyRate;
-    const monthlyValueLost = weeklyValueLost * 4.3;
-    const estimatedHoursRecovered = Math.round(founderHoursWaste * 0.85);
-    const monthlyNetFounderValueGained = estimatedHoursRecovered * founderHourlyRate * 4.3;
-    const estimatedReachGrowth = Math.round(currentMonthlyFollowers * 2.8);
-    return {
-      monthlyValueLost,
-      estimatedHoursRecovered,
-      monthlyNetFounderValueGained,
-      estimatedReachGrowth
-    };
-  }, [founderHoursWaste, founderHourlyRate, currentMonthlyFollowers]);
-
-  const handleSliderMove = (clientX) => {
-    if (!sliderRef.current) return;
-    const rect = sliderRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    const percent = Math.max(5, Math.min(95, (x / rect.width) * 100));
-    setSliderPosition(percent);
-  };
-
-  const handleMouseDown = (e) => {
-    setIsDraggingSlider(true);
-    handleSliderMove(e.clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    if (e.touches && e.touches[0]) {
-      handleSliderMove(e.touches[0].clientX);
-    }
-  };
-
-  const formatCityTime = (timeZone) => {
-    try {
-      return currentUtcDate.toLocaleTimeString('en-US', {
-        timeZone,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      });
-    } catch {
-      return '12:00:00 PM';
-    }
-  };
-
-  const renderNav = () => (
-    <header className="sticky top-0 z-40 backdrop-blur-xl bg-neutral-950/80 border-b border-white/10 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Brand identity */}
-        <div
-          onClick={() => {
-            playTactilePop(520);
-            setCurrentTab('home');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          className="flex items-center gap-3 cursor-pointer group select-none"
-        >
-          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-pink-500 via-rose-500 to-amber-400 p-[2px] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-2 shadow-lg shadow-pink-500/20">
-            <div className="w-full h-full bg-neutral-950 rounded-[14px] flex items-center justify-center">
-              <span className="font-black text-transparent bg-clip-text bg-gradient-to-tr from-pink-400 to-amber-300 text-lg sm:text-xl tracking-tighter">
-                MY
-              </span>
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-extrabold text-white text-base sm:text-lg tracking-tight group-hover:text-pink-300 transition-colors">
-                Marga Yanos
-              </h1>
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" title="Available for Select Retainers" />
-            </div>
-            <p className="text-[11px] sm:text-xs text-neutral-400 font-medium">Social Media Manager & Executive VA</p>
-          </div>
-        </div>
-
-        {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 p-1.5 rounded-full shadow-inner">
-          {[
-            { id: 'home', label: 'Overview' },
-            { id: 'resume', label: 'Resume & Stack' },
-            { id: 'portfolio', label: 'Case Studies' },
-            { id: 'feed', label: 'Aesthetic Feed' },
-            { id: 'deliverables', label: 'Deliverables Vault' },
-            { id: 'services', label: 'Packages & Rates' },
-            { id: 'calculator', label: 'ROI Calculator' },
-            { id: 'faq', label: 'FAQs' }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => {
-                playTactilePop(600);
-                setCurrentTab(tab.id);
-              }}
-              className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
-                currentTab === tab.id
-                  ? 'bg-gradient-to-r ' + activeTheme.accent + ' text-white shadow-md shadow-pink-500/20 font-bold scale-105'
-                  : 'text-neutral-300 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
-
-        {/* Right utility toolbar */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Sound Synthesizer Toggle */}
-          <button
-            onClick={() => {
-              setSoundEnabled(!soundEnabled);
-              playTactilePop(500);
-            }}
-            title={soundEnabled ? 'Mute audio feedback' : 'Enable audio feedback'}
-            className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/10 transition-all text-xs"
-          >
-            {soundEnabled ? <Volume2 size={16} className="text-pink-400" /> : <VolumeX size={16} />}
-          </button>
-
-          {/* Theme Palette Switcher */}
-          <button
-            onClick={() => {
-              const keys = Object.keys(THEMES);
-              const nextIdx = (keys.indexOf(themeKey) + 1) % keys.length;
-              setThemeKey(keys[nextIdx]);
-              playTactilePop(700);
-            }}
-            className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/10 transition-all"
-            title="Cycle Color Palette"
-          >
-            <Palette size={16} className="text-amber-400" />
-          </button>
-
-          {/* Direct Booking CTA */}
-          <button
-            onClick={() => {
-              triggerConfetti();
-              setCurrentTab('contact');
-            }}
-            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white font-extrabold text-xs shadow-lg shadow-pink-500/25 hover:brightness-110 active:scale-95 transition-all"
-          >
-            <Sparkles size={14} className="animate-spin text-amber-200" style={{ animationDuration: '4s' }} />
-            <span>Book Discovery</span>
-          </button>
-
-          {/* Mobile Drawer Hamburger Button */}
-          <button
-            onClick={() => {
-              playTactilePop(480);
-              setMobileMenuOpen(!mobileMenuOpen);
-            }}
-            className="lg:hidden p-2.5 rounded-2xl bg-white/10 text-white border border-white/15"
-            aria-label="Toggle mobile menu"
-          >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Drawer Overlay */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-white/10 bg-neutral-950/95 backdrop-blur-2xl px-6 py-6 space-y-4 animate-fadeIn">
-          <div className="grid grid-cols-2 gap-2 text-xs font-bold">
-            {[
-              { id: 'home', label: '🏠 Overview' },
-              { id: 'resume', label: '📄 Resume & Skills' },
-              { id: 'portfolio', label: '📈 Case Studies' },
-              { id: 'feed', label: '📱 Aesthetic Feed' },
-              { id: 'deliverables', label: '📂 Deliverables' },
-              { id: 'services', label: '💎 Packages & Rates' },
-              { id: 'calculator', label: '🧮 ROI Calculator' },
-              { id: 'faq', label: '❓ FAQs & Timezones' },
-              { id: 'contact', label: '📅 Book Discovery Call' }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  playTactilePop(580);
-                  setCurrentTab(tab.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`p-3 rounded-xl text-left transition-colors ${
-                  currentTab === tab.id
-                    ? 'bg-pink-500/20 text-pink-300 border border-pink-500/40 font-black'
-                    : 'bg-white/5 text-neutral-300 border border-white/5'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="pt-2 flex items-center justify-between border-t border-white/10 text-xs">
-            <span className="text-neutral-400">Direct Connect:</span>
-            <div className="flex gap-2">
-              <button
-                onClick={handleCopyEmail}
-                className="px-3 py-1.5 rounded-lg bg-white/10 text-neutral-200 flex items-center gap-1.5"
-              >
-                <Mail size={13} />
-                <span>{copiedNotification ? 'Copied!' : 'Copy Email'}</span>
-              </button>
-              <button
-                onClick={() => {
-                  setShowResumeModal(true);
-                  setMobileMenuOpen(false);
-                }}
-                className="px-3 py-1.5 rounded-lg bg-pink-500/20 text-pink-300 border border-pink-500/30 flex items-center gap-1.5 font-bold"
-              >
-                <Download size={13} />
-                <span>CV PDF</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-
-  const renderComparisonTool = () => (
-    <div className="bg-neutral-900/80 border border-white/10 rounded-3xl p-6 sm:p-10 backdrop-blur-2xl space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Visual Transformation</span>
-          <h3 className="text-2xl sm:text-3xl font-black text-white mt-1">
-            Before vs. After Marga's Systems
-          </h3>
-          <p className="text-xs sm:text-sm text-neutral-400">
-            Drag the central slider or swipe on mobile to see the operational contrast.
-          </p>
-        </div>
-
-        {/* Mode Selector */}
-        <div className="flex items-center gap-2 p-1 bg-white/5 rounded-2xl border border-white/10 self-start sm:self-auto">
-          <button
-            onClick={() => {
-              playTactilePop(520);
-              setComparisonMode('workspace');
-            }}
-            className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-              comparisonMode === 'workspace'
-                ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md'
-                : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            Executive Ops (Inbox & Notion)
-          </button>
-          <button
-            onClick={() => {
-              playTactilePop(520);
-              setComparisonMode('social');
-            }}
-            className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-              comparisonMode === 'social'
-                ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md'
-                : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            Social Grid & Reels
-          </button>
-        </div>
-      </div>
-
-      {/* Interactive Visual Slider Container */}
-      <div
-        ref={sliderRef}
-        onMouseDown={handleMouseDown}
-        onMouseUp={() => setIsDraggingSlider(false)}
-        onMouseLeave={() => setIsDraggingSlider(false)}
-        onMouseMove={(e) => isDraggingSlider && handleSliderMove(e.clientX)}
-        onTouchMove={handleTouchMove}
-        className="relative h-80 sm:h-96 rounded-2xl overflow-hidden select-none cursor-ew-resize border border-white/15 shadow-2xl"
-      >
-        {/* Right Side: AFTER (Streamlined / Marga's System) */}
-        <div className="absolute inset-0 bg-neutral-900 flex flex-col justify-between p-6 sm:p-8">
-          <div className="flex justify-end">
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 backdrop-blur-md flex items-center gap-1.5">
-              <CheckCircle2 size={14} />
-              AFTER: Scaled & Autonomous
-            </span>
-          </div>
-
-          {comparisonMode === 'workspace' ? (
-            <div className="space-y-4 max-w-md ml-auto text-right">
-              <div className="text-emerald-400 font-mono text-xs font-bold tracking-wider">
-                100% INBOX ZERO • AUTOMATED NOTION SOPs
-              </div>
-              <h4 className="text-xl sm:text-2xl font-black text-white">
-                Quiet Mind. Flawless 5-Timezone Calendaring.
-              </h4>
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-                VIP emails categorized, draft replies pre-written, investor briefs loaded 24 hours in advance, and automated CRM tracking.
-              </p>
-              <div className="inline-flex gap-2">
-                <span className="text-[11px] font-bold px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-neutral-200">
-                  ⚡ 20+ Hrs Freed
-                </span>
-                <span className="text-[11px] font-bold px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-emerald-400">
-                  ✨ 0 Missed Calls
-                </span>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4 max-w-md ml-auto text-right">
-              <div className="text-pink-400 font-mono text-xs font-bold tracking-wider">
-                COHESIVE LUXURY PALETTE • 340% REACH LIFT
-              </div>
-              <h4 className="text-xl sm:text-2xl font-black text-white">
-                Magnetic Content That Converts Viewers to Buyers.
-              </h4>
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-                7-second psychology-driven hooks, synchronized audio, kinetic subtitles, and ManyChat lead capture workflows.
-              </p>
-              <div className="inline-flex gap-2">
-                <span className="text-[11px] font-bold px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-pink-300">
-                  🔥 1.4M Impressions
-                </span>
-                <span className="text-[11px] font-bold px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-amber-400">
-                  💬 8.4% Bio CTR
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Left Side: BEFORE (Chaotic / Disorganized) - Clipped via slider position */}
-        <div
-          className="absolute inset-y-0 left-0 bg-neutral-950/95 border-r-2 border-pink-500 overflow-hidden flex flex-col justify-between p-6 sm:p-8"
-          style={{ width: `${sliderPosition}%` }}
-        >
-          <div>
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-rose-500/20 text-rose-300 border border-rose-500/40 backdrop-blur-md">
-              BEFORE: Chaos & Bottlenecks
-            </span>
-          </div>
-
-          {comparisonMode === 'workspace' ? (
-            <div className="space-y-4 max-w-md">
-              <div className="text-rose-400 font-mono text-xs font-bold tracking-wider">
-                1,420 UNREAD EMAILS • CALENDAR CONFLICTS
-              </div>
-              <h4 className="text-xl sm:text-2xl font-black text-white">
-                Drowning in Low-Leverage Busywork.
-              </h4>
-              <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                Double-booked Zoom calls, unformatted spreadsheets, delayed pitch deck follow-ups, and 15+ hours lost every week.
-              </p>
-              <div className="flex gap-2">
-                <span className="text-[11px] font-bold px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-300">
-                  ⚠️ Founder Burnout
-                </span>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4 max-w-md">
-              <div className="text-rose-400 font-mono text-xs font-bold tracking-wider">
-                DISJOINTED FEED • SUB-1% ENGAGEMENT
-              </div>
-              <h4 className="text-xl sm:text-2xl font-black text-white">
-                Random Posting With Zero Strategy.
-              </h4>
-              <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                Inconsistent fonts, sporadic posting schedule, low video retention, and zero conversion from social visitors to paying clients.
-              </p>
-              <div className="flex gap-2">
-                <span className="text-[11px] font-bold px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-300">
-                  📉 Stagnant Growth
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Divider Bar & Handle */}
-        <div
-          className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-pink-400 via-rose-500 to-amber-400 cursor-ew-resize flex items-center justify-center -translate-x-1/2"
-          style={{ left: `${sliderPosition}%` }}
-        >
-          <div className="w-9 h-9 rounded-full bg-white text-neutral-900 shadow-2xl flex items-center justify-center font-bold text-xs border-2 border-pink-500">
-            <Repeat size={14} className="animate-spin text-pink-600" style={{ animationDuration: '8s' }} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderTimezoneClocks = () => (
-    <div className="bg-neutral-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
-        <div>
-          <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1.5">
-            <Globe size={14} />
-            Live Global Availability & Sync
-          </span>
-          <h3 className="text-xl sm:text-2xl font-black text-white mt-1">
-            Real-Time Zone Overlap Engine
-          </h3>
-        </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span>Active & Ready to Coordinate</span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {[
-          { city: 'Manila (Home HQ)', tz: 'Asia/Manila', label: 'UTC+8 (PHT)', isHQ: true },
-          { city: 'New York', tz: 'America/New_York', label: 'US Eastern (EDT)', isHQ: false },
-          { city: 'Los Angeles', tz: 'America/Los_Angeles', label: 'US Pacific (PDT)', isHQ: false },
-          { city: 'London', tz: 'Europe/London', label: 'UK (BST / GMT)', isHQ: false },
-          { city: 'Sydney', tz: 'Australia/Sydney', label: 'AEST', isHQ: false }
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className={`p-4 rounded-2xl border transition-all ${
-              item.isHQ
-                ? 'bg-gradient-to-br from-pink-500/15 via-rose-500/10 to-transparent border-pink-500/40 shadow-lg'
-                : 'bg-white/5 border-white/10 hover:border-white/20'
-            }`}
-          >
-            <div className="text-[11px] font-bold text-neutral-400 flex items-center justify-between">
-              <span>{item.city}</span>
-              {item.isHQ && <span className="text-[10px] text-pink-400 font-extrabold">HQ</span>}
-            </div>
-            <div className="text-base sm:text-lg font-mono font-black text-white mt-1">
-              {formatCityTime(item.tz)}
-            </div>
-            <div className="text-[10px] text-neutral-400 mt-1">{item.label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderDeliverablesVault = () => (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-10">
-      <div className="text-center max-w-3xl mx-auto space-y-3">
-        <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Tangible Work Samples</span>
-        <h2 className="text-3xl sm:text-5xl font-black text-white">
-          Interactive Deliverables Vault
-        </h2>
-        <p className="text-neutral-400 text-xs sm:text-sm">
-          Click between Marga's standardized content calendars, executive daily briefing briefings, and analytical KPI reports.
-        </p>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex flex-wrap justify-center gap-2">
-        {[
-          { id: 'calendar', label: '📅 Weekly Content Calendar', icon: Calendar },
-          { id: 'briefing', label: '✈️ C-Suite Daily Brief & Itinerary', icon: FileText },
-          { id: 'analytics', label: '📊 Monthly Social KPI Audit', icon: PieChart }
-        ].map((tab) => {
-          const IconComp = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => {
-                playTactilePop(560);
-                setActiveDeliverableTab(tab.id);
-              }}
-              className={`px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 transition-all ${
-                activeDeliverableTab === tab.id
-                  ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg shadow-pink-500/25 scale-105'
-                  : 'bg-white/5 hover:bg-white/10 text-neutral-300 border border-white/10'
-              }`}
-            >
-              <IconComp size={15} />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Vault Preview Container */}
-      <div className="bg-neutral-900/80 border border-white/15 rounded-3xl p-6 sm:p-10 backdrop-blur-2xl shadow-2xl">
-        {/* Sub-view 1: Weekly Content Calendar Mockup */}
-        {activeDeliverableTab === 'calendar' && (
-          <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-              <div>
-                <h3 className="text-xl font-black text-white">Airtable / Notion Content Sprint Architecture</h3>
-                <p className="text-xs text-neutral-400">Week 34 Client Production Pipeline (Approved & Scheduled)</p>
-              </div>
-              <span className="text-xs font-mono font-bold text-pink-300 bg-pink-500/10 px-3 py-1 rounded-full border border-pink-500/20 self-start sm:self-auto">
-                Status: 100% Scheduled in Buffer
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                {
-                  day: 'Monday (Reel)',
-                  title: 'Behind the Scenes: Product Launch Sprint',
-                  hook: '"Why 90% of DTC stores fail their first quarter..."',
-                  status: 'Scheduled',
-                  color: 'border-pink-500/40 bg-pink-500/5',
-                  stats: 'Expected Reach: 45K+'
-                },
-                {
-                  day: 'Wednesday (Carousel)',
-                  title: '5 Steps to Scale Executive Team Delegation',
-                  hook: '"If you do these 3 tasks today, you lose money..."',
-                  status: 'Scheduled',
-                  color: 'border-amber-500/40 bg-amber-500/5',
-                  stats: 'Saves Target: 800+'
-                },
-                {
-                  day: 'Friday (Reel + TikTok)',
-                  title: 'Founder FAQ: Overcoming Investor Roadblocks',
-                  hook: '"The exact pitch deck framework that unlocked $1.2M..."',
-                  status: 'Scheduled',
-                  color: 'border-emerald-500/40 bg-emerald-500/5',
-                  stats: 'ManyChat Funnel: Active'
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: {
+                            pink: '#ec4899',
+                            rose: '#f43f5e',
+                            amber: '#f59e0b',
+                            purple: '#a855f7',
+                            cyan: '#06b6d4',
+                            emerald: '#10b981'
+                        }
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'fadeIn': 'fadeIn 0.4s ease-out forwards',
+                        'slideUp': 'slideUp 0.4s ease-out forwards',
+                        'blob': 'blob 10s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
                 }
-              ].map((item, idx) => (
-                <div key={idx} className={`p-4 rounded-2xl border ${item.color} space-y-3`}>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-white">{item.day}</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-white/10 text-emerald-300">
-                      {item.status}
-                    </span>
-                  </div>
-                  <div className="font-bold text-sm text-neutral-100">{item.title}</div>
-                  <div className="text-xs text-neutral-400 italic">{item.hook}</div>
-                  <div className="pt-2 border-t border-white/10 text-[11px] font-mono text-pink-300">
-                    {item.stats}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+            }
+        }
+    </script>
 
-        {/* Sub-view 2: Executive Daily Brief & Travel Mockup */}
-        {activeDeliverableTab === 'briefing' && (
-          <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-              <div>
-                <h3 className="text-xl font-black text-white">C-Level Morning Briefing & Travel Deck</h3>
-                <p className="text-xs text-neutral-400">Delivered daily to Slack at 7:30 AM local time</p>
-              </div>
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 self-start sm:self-auto">
-                All 4 Actions Confirmed
-              </span>
-            </div>
+    <style>
+        :root {
+            --theme-accent-1: #ec4899; /* pink-500 */
+            --theme-accent-2: #f43f5e; /* rose-500 */
+            --theme-accent-3: #f59e0b; /* amber-500 */
+            --blob-1: rgba(236, 72, 153, 0.3);
+            --blob-2: rgba(168, 85, 247, 0.3);
+            --blob-3: rgba(245, 158, 11, 0.3);
+        }
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-3 bg-neutral-950/60 p-5 rounded-2xl border border-white/10">
-                <div className="text-xs font-bold text-rose-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Inbox size={14} /> Priority Inbound Triage Summary
-                </div>
-                <ul className="space-y-2 text-xs text-neutral-300">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0 mt-0.5" />
-                    <span><strong>Sequoia Capital Partner:</strong> Rescheduled to 3:00 PM EST Thursday (Updated in Google Cal).</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0 mt-0.5" />
-                    <span><strong>Keynote Speaker Contract:</strong> Drafted approval signature & sent back to event director.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0 mt-0.5" />
-                    <span><strong>12 Cold Sales Emails:</strong> Filtered and archived to spam folder.</span>
-                  </li>
-                </ul>
-              </div>
+        /* Theme Cosmic Violet */
+        [data-theme="cosmic"] {
+            --theme-accent-1: #a855f7; /* purple-500 */
+            --theme-accent-2: #6366f1; /* indigo-500 */
+            --theme-accent-3: #06b6d4; /* cyan-500 */
+            --blob-1: rgba(168, 85, 247, 0.3);
+            --blob-2: rgba(99, 102, 241, 0.3);
+            --blob-3: rgba(6, 182, 212, 0.3);
+        }
 
-              <div className="space-y-3 bg-neutral-950/60 p-5 rounded-2xl border border-white/10">
-                <div className="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Plane size={14} /> Multi-City Travel Itinerary
-                </div>
-                <div className="text-xs text-neutral-300 space-y-2">
-                  <div className="p-2.5 rounded-xl bg-white/5 border border-white/5">
-                    <strong>Flight AA-104:</strong> JFK → LHR (Seats 4A Confirmed, Boarding Pass in Apple Wallet).
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-white/5 border border-white/5">
-                    <strong>The Ned Hotel, London:</strong> Checked in, early 11:00 AM check-in arranged with concierge.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        /* Theme Cyber Emerald */
+        [data-theme="emerald"] {
+            --theme-accent-1: #10b981; /* emerald-500 */
+            --theme-accent-2: #14b8a6; /* teal-500 */
+            --theme-accent-3: #06b6d4; /* cyan-500 */
+            --blob-1: rgba(16, 185, 129, 0.3);
+            --blob-2: rgba(20, 184, 166, 0.3);
+            --blob-3: rgba(6, 182, 212, 0.3);
+        }
 
-        {/* Sub-view 3: Monthly Social Media KPI Audit Mockup */}
-        {activeDeliverableTab === 'analytics' && (
-          <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-              <div>
-                <h3 className="text-xl font-black text-white">Client Executive Social Performance Audit</h3>
-                <p className="text-xs text-neutral-400">Quarterly growth metrics, lead volume & conversion attribution</p>
-              </div>
-              <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 self-start sm:self-auto">
-                Target Exceeded by 142%
-              </span>
-            </div>
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { label: 'Total Organic Reach', val: '2.4M', delta: '+340% YoY' },
-                { label: 'Website Bio Link Clicks', val: '18,400', delta: '+88% MoM' },
-                { label: 'Lead Magnet Downloads', val: '3,820', delta: '+210% MoM' },
-                { label: 'Direct Attribute GMV', val: '$84,200', delta: '+165% YoY' }
-              ].map((m, idx) => (
-                <div key={idx} className="bg-neutral-950/80 p-4 rounded-2xl border border-white/5 text-center">
-                  <div className="text-xs text-neutral-400">{m.label}</div>
-                  <div className="text-2xl font-black text-white mt-1">{m.val}</div>
-                  <div className="text-xs font-bold text-emerald-400 mt-0.5">{m.delta}</div>
-                </div>
-              ))}
-            </div>
+        /* Dynamic Theme Classes */
+        .theme-gradient-text {
+            background: linear-gradient(to right, var(--theme-accent-1), var(--theme-accent-2), var(--theme-accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .theme-gradient-bg {
+            background: linear-gradient(to right, var(--theme-accent-1), var(--theme-accent-2), var(--theme-accent-3));
+        }
+        .theme-border {
+            border-color: var(--theme-accent-1);
+        }
+        .theme-hover:hover {
+            box-shadow: 0 0 25px var(--blob-1);
+            border-color: var(--theme-accent-1);
+        }
 
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-neutral-300 leading-relaxed">
-              <strong className="text-pink-300 font-bold">Strategic Recommendation:</strong> Short-form video format #2 (Educational breakdowns with kinetic captions) generated 64% of total email leads. We recommend allocating 70% of next month’s production sprints to this format.
-            </div>
-          </div>
-        )}
-      </div>
+        /* Ambient Blobs */
+        .blob {
+            position: fixed;
+            filter: blur(100px);
+            z-index: -1;
+            border-radius: 50%;
+            animation: blob 15s infinite alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--blob-1); }
+        .blob-2 { top: 40%; right: -10%; width: 40vw; height: 40vw; background: var(--blob-2); animation-delay: 2s; }
+        .blob-3 { bottom: -20%; left: 20%; width: 60vw; height: 60vw; background: var(--blob-3); animation-delay: 4s; }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(15, 15, 15, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card {
+            background: rgba(20, 20, 20, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
+        /* Section visibility */
+        .nav-section { display: none; }
+        .nav-section.active { display: block; animation: fadeIn 0.4s ease-out; }
+
+        /* Mobile specific overrides */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 100% !important;
+                max-width: 100% !important;
+                border-radius: 24px 24px 0 0 !important;
+                margin-top: auto !important;
+                max-height: 90vh;
+            }
+            .modal-container {
+                align-items: flex-end !important;
+            }
+        }
+        
+        /* Hide scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+    </style>
+</head>
+<body data-theme="vibrant">
+
+    <!-- Ambient Background -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Confetti / Alert Toast -->
+    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 theme-gradient-bg text-white font-black text-xs px-6 py-2.5 rounded-full shadow-2xl hidden items-center gap-2 transition-all">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span id="toast-msg">Action Triggered! Let's create magic.</span>
     </div>
-  );
 
-  const renderAestheticFeed = () => (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-12">
-      <div className="text-center max-w-3xl mx-auto space-y-3">
-        <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Live Visual Showcase</span>
-        <h2 className="text-3xl sm:text-5xl font-black text-white">
-          Aesthetic Social Media Feed
-        </h2>
-        <p className="text-neutral-400 text-xs sm:text-sm">
-          Simulated Instagram/TikTok curated grid. Click any post to preview copywriting, engagement stats, and audio curation notes.
-        </p>
-      </div>
-
-      {/* Grid container */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {AESTHETIC_POSTS.map((post) => (
-          <div
-            key={post.id}
-            onClick={() => {
-              playTactilePop(640);
-              setSelectedAestheticPost(post);
-            }}
-            className="group relative rounded-3xl overflow-hidden bg-neutral-900 border border-white/10 hover:border-pink-500/50 transition-all duration-300 hover:-translate-y-2 shadow-xl cursor-pointer"
-          >
-            <div className="relative aspect-[4/5] overflow-hidden">
-              <img
-                src={post.image}
-                alt={post.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
-
-              {/* Badges */}
-              <div className="absolute top-4 left-4">
-                <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase bg-neutral-950/80 backdrop-blur-md text-pink-300 border border-pink-500/30">
-                  {post.type}
-                </span>
-              </div>
-
-              {/* Bottom Post Info */}
-              <div className="absolute bottom-4 left-4 right-4 space-y-2">
-                <div className="flex items-center gap-3 text-xs text-white font-bold">
-                  <span className="flex items-center gap-1">
-                    <Eye size={14} className="text-pink-400" /> {post.views}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Heart size={14} className="text-rose-400" /> {post.likes}
-                  </span>
+    <!-- Desktop Header -->
+    <header class="sticky top-0 z-40 glass border-b border-white/10 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand -->
+            <div class="flex items-center gap-3 cursor-pointer group select-none" onclick="navigate('home')">
+                <div class="w-11 h-11 rounded-2xl theme-gradient-bg p-[2px] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-2 shadow-lg">
+                    <div class="w-full h-full bg-neutral-950 rounded-[14px] flex items-center justify-center">
+                        <span class="font-black theme-gradient-text text-lg tracking-tighter">MY</span>
+                    </div>
                 </div>
-                <h4 className="text-base font-extrabold text-white group-hover:text-pink-300 transition-colors line-clamp-1">
-                  {post.title}
-                </h4>
-                <p className="text-xs text-neutral-300 line-clamp-2">{post.caption}</p>
-              </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-extrabold text-white text-base tracking-tight transition-colors">Marga Yanos</h1>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" title="Available for Select Retainers"></span>
+                    </div>
+                    <p class="text-[11px] text-neutral-400 font-medium">Social Media Manager & Exec VA</p>
+                </div>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 
-  const renderOnboardingRoadmap = () => (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-12">
-      <div className="text-center max-w-2xl mx-auto space-y-3">
-        <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Seamless Integration</span>
-        <h2 className="text-3xl sm:text-5xl font-black text-white">
-          How We Partner: 4-Step Roadmap
-        </h2>
-        <p className="text-neutral-400 text-xs sm:text-sm">
-          From initial handshake to autonomous execution in less than 96 hours.
-        </p>
-      </div>
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 p-1.5 rounded-full shadow-inner">
+                <button onclick="navigate('home')" class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-full text-neutral-300 hover:text-white hover:bg-white/5 transition-all" data-target="home">Overview</button>
+                <button onclick="navigate('resume')" class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-full text-neutral-300 hover:text-white hover:bg-white/5 transition-all" data-target="resume">Resume</button>
+                <button onclick="navigate('portfolio')" class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-full text-neutral-300 hover:text-white hover:bg-white/5 transition-all" data-target="portfolio">Case Studies</button>
+                <button onclick="navigate('feed')" class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-full text-neutral-300 hover:text-white hover:bg-white/5 transition-all" data-target="feed">Aesthetic Feed</button>
+                <button onclick="navigate('vault')" class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-full text-neutral-300 hover:text-white hover:bg-white/5 transition-all" data-target="vault">Vault</button>
+                <button onclick="navigate('services')" class="nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-full text-neutral-300 hover:text-white hover:bg-white/5 transition-all" data-target="services">Rates & ROI</button>
+            </nav>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          {
-            step: '01',
-            title: 'Discovery & Audit',
-            time: 'Day 1',
-            desc: '45-minute strategy call to diagnose bottlenecks, review brand voice guidelines, and set quarterly KPIs.'
-          },
-          {
-            step: '02',
-            title: 'Systems & Access Handover',
-            time: 'Day 2',
-            desc: 'Secure 1Password credential handover, Notion dashboard deployment, and Asana board setup.'
-          },
-          {
-            step: '03',
-            title: 'Content Sprint & Setup',
-            time: 'Day 3 - 4',
-            desc: 'First 2 weeks of high-retention short-form reels and carousels delivered for your 1-click approval.'
-          },
-          {
-            step: '04',
-            title: 'Autonomous Scaling',
-            time: 'Ongoing',
-            desc: 'Daily inbox zero, calendar management, and bi-weekly strategic optimization calls while you reclaim 20+ hrs/wk.'
-          }
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className="relative bg-neutral-900/60 border border-white/10 hover:border-pink-500/40 rounded-3xl p-6 backdrop-blur-xl transition-all hover:-translate-y-1.5"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300">
-                {item.step}
-              </span>
-              <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-white/10 text-neutral-300">
-                {item.time}
-              </span>
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
-            <p className="text-xs text-neutral-400 leading-relaxed">{item.desc}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderFAQ = () => {
-    const filteredFaqs = FAQS.filter(item => {
-      const matchesCategory = faqCategory === 'All' || item.category === faqCategory;
-      const matchesSearch = item.q.toLowerCase().includes(faqSearchQuery.toLowerCase()) || item.a.toLowerCase().includes(faqSearchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-
-    return (
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-10">
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Everything You Need to Know</span>
-          <h2 className="text-3xl sm:text-5xl font-black text-white">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-neutral-400 text-xs sm:text-sm">
-            Answers regarding time zones, confidentiality, trial periods, and social media workflows.
-          </p>
-        </div>
-
-        {/* Search Bar & Category Filters */}
-        <div className="space-y-4">
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
-            <input
-              type="text"
-              placeholder="Search timezones, NDAs, pricing..."
-              value={faqSearchQuery}
-              onChange={(e) => setFaqSearchQuery(e.target.value)}
-              className="w-full bg-neutral-900 border border-white/10 focus:border-pink-500 rounded-2xl pl-11 pr-4 py-3 text-xs sm:text-sm text-white outline-none transition-colors"
-            />
-          </div>
-
-          <div className="flex justify-center gap-2">
-            {['All', 'Operations', 'Social Media', 'Onboarding & Pricing'].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  playTactilePop(520);
-                  setFaqCategory(cat);
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                  faqCategory === cat
-                    ? 'bg-pink-500 text-white'
-                    : 'bg-white/5 hover:bg-white/10 text-neutral-300'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Accordion list */}
-        <div className="space-y-3">
-          {filteredFaqs.map((faq, idx) => {
-            const isOpen = openFaqIndex === idx;
-            return (
-              <div
-                key={idx}
-                className="bg-neutral-900/60 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-xl transition-all"
-              >
-                <button
-                  onClick={() => {
-                    playTactilePop(500);
-                    setOpenFaqIndex(isOpen ? null : idx);
-                  }}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-white hover:text-pink-300 transition-colors"
-                >
-                  <span>{faq.q}</span>
-                  <ChevronDown
-                    size={18}
-                    className={`transition-transform duration-300 text-pink-400 shrink-0 ${isOpen ? 'rotate-180' : ''}`}
-                  />
+            <!-- Tools -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button onclick="toggleTheme()" class="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-neutral-300 border border-white/10 transition-all" title="Cycle Theme">
+                    <i class="fa-solid fa-palette text-amber-400"></i>
                 </button>
-
-                {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-neutral-300 leading-relaxed border-t border-white/5 pt-3">
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                <button onclick="navigate('contact')" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full theme-gradient-bg text-white font-extrabold text-xs shadow-lg hover:brightness-110 active:scale-95 transition-all">
+                    <i class="fa-solid fa-sparkles animate-spin-slow text-amber-200"></i>
+                    <span>Book Discovery</span>
+                </button>
+            </div>
         </div>
-      </div>
-    );
-  };
+    </header>
 
-  const renderHome = () => (
-    <div className="space-y-20 pb-20">
-      {/* Hero section */}
-      <section className="relative pt-10 md:pt-16 px-4 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* Pitch */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-amber-500/10 border border-pink-500/30 backdrop-blur-md">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-              <span className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-rose-300 to-amber-200 uppercase tracking-widest">
-                Accepting 2 Retainer Clients for Q3/Q4
-              </span>
-            </div>
+    <main class="relative z-10 pb-24 lg:pb-10">
+        
+        <!-- SECTION: HOME -->
+        <section id="home" class="nav-section max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-20">
+            <!-- Hero -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 glass">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span class="text-xs font-bold theme-gradient-text uppercase tracking-widest">Accepting 2 Retainer Clients for Q3/Q4</span>
+                    </div>
+                    <h1 class="text-4xl sm:text-6xl xl:text-7xl font-black text-white tracking-tight leading-[1.08]">
+                        Turning <span class="theme-gradient-text">Quiet Feeds</span> Into Revenue Machines.
+                    </h1>
+                    <p class="text-sm sm:text-base text-neutral-300 font-normal leading-relaxed max-w-2xl">
+                        I’m <strong class="text-white font-semibold">Marga Yanos</strong>, a high-converting Social Media Strategist & Executive Operations Assistant. I help busy CEOs, 7-figure founders, and creator brands generate viral short-form growth while orchestrating backend calendar, email, and task automation.
+                    </p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                        <div class="glass-card theme-hover rounded-2xl p-3.5">
+                            <div class="text-xl sm:text-2xl font-black theme-gradient-text">10M+</div>
+                            <div class="text-xs font-semibold text-white mt-1">Organic Views</div>
+                        </div>
+                        <div class="glass-card theme-hover rounded-2xl p-3.5">
+                            <div class="text-xl sm:text-2xl font-black theme-gradient-text">20+ Hrs</div>
+                            <div class="text-xs font-semibold text-white mt-1">Saved / Week</div>
+                        </div>
+                        <div class="glass-card theme-hover rounded-2xl p-3.5">
+                            <div class="text-xl sm:text-2xl font-black theme-gradient-text">98%</div>
+                            <div class="text-xs font-semibold text-white mt-1">Retention Rate</div>
+                        </div>
+                        <div class="glass-card theme-hover rounded-2xl p-3.5">
+                            <div class="text-xl sm:text-2xl font-black theme-gradient-text">&lt; 15m</div>
+                            <div class="text-xs font-semibold text-white mt-1">Response Time</div>
+                        </div>
+                    </div>
 
-            <h1 className="text-4xl sm:text-6xl xl:text-7xl font-black text-white tracking-tight leading-[1.08]">
-              Turning <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-rose-400 to-amber-300">Quiet Feeds</span> Into Revenue Machines.
-            </h1>
-
-            <p className="text-sm sm:text-base text-neutral-300 font-normal leading-relaxed max-w-2xl">
-              I’m <strong className="text-white font-semibold">Marga Yanos</strong>, a high-converting Social Media Strategist & Executive Operations Assistant. I help busy CEOs, 7-figure founders, and creator brands generate viral short-form growth while orchestrating backend calendar, email, and task automation.
-            </p>
-
-            {/* Quick Metrics Bar */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-              {[
-                { number: '10M+', label: 'Organic Views Managed', sub: 'Across 15+ Brands' },
-                { number: '20+ Hrs', label: 'Saved Per Client/Wk', sub: 'Executive Triage' },
-                { number: '98%', label: 'Client Retention Rate', sub: 'Long-term Retainers' },
-                { number: '< 15m', label: 'Response Time', sub: 'Inbound Inquiries' }
-              ].map((stat, i) => (
-                <div
-                  key={i}
-                  className="bg-neutral-900/60 border border-white/10 rounded-2xl p-3.5 backdrop-blur-md hover:border-pink-500/40 transition-all hover:-translate-y-1"
-                >
-                  <div className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300">
-                    {stat.number}
-                  </div>
-                  <div className="text-xs font-semibold text-white mt-1 leading-snug">{stat.label}</div>
-                  <div className="text-[10px] text-neutral-400">{stat.sub}</div>
+                    <!-- Actions -->
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <button onclick="navigate('contact'); showToast('Redirecting to booking...')" class="px-7 py-4 rounded-2xl theme-gradient-bg text-white font-extrabold text-sm shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 group">
+                            <span>Book 15-Min Discovery Call</span>
+                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                        <button onclick="navigate('portfolio')" class="px-6 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm border border-white/10 transition-all flex items-center gap-2">
+                            <i class="fa-regular fa-eye text-pink-400"></i>
+                            <span>View Case Studies</span>
+                        </button>
+                    </div>
                 </div>
-              ))}
+
+                <!-- Right Visual -->
+                <div class="lg:col-span-5 relative mx-auto max-w-md w-full">
+                    <div class="glass-card theme-hover rounded-3xl p-6 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-14 h-14 rounded-2xl overflow-hidden border-2 theme-border shadow-md">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" alt="Marga Yanos" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h2 class="text-white font-bold text-base flex items-center gap-1.5">
+                                        Marga Yanos <i class="fa-solid fa-circle-check text-pink-400"></i>
+                                    </h2>
+                                    <p class="text-xs text-pink-300 font-medium">Digital Ops & Social Strategist</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-bold text-emerald-400">Active</span>
+                        </div>
+                        
+                        <div class="space-y-3 bg-neutral-950/60 rounded-2xl p-4 border border-white/5">
+                            <div class="flex items-center justify-between text-xs text-neutral-400">
+                                <span class="font-semibold text-neutral-200"><i class="fa-solid fa-arrow-trend-up text-emerald-400 mr-1"></i> Quarterly Engagement</span>
+                                <span class="text-emerald-400 font-mono font-bold">+340% Lift</span>
+                            </div>
+                            <div class="w-full bg-neutral-800 rounded-full h-3 overflow-hidden p-0.5">
+                                <div class="theme-gradient-bg h-full rounded-full w-[88%] animate-pulse"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10">✨ Hook Scripts</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10">⚡ Notion SOPs</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10">🎯 Inbox Zero</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                onClick={() => {
-                  triggerConfetti();
-                  setCurrentTab('contact');
-                }}
-                className="px-7 py-4 rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white font-extrabold text-sm shadow-xl shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 group"
-              >
-                <span>Book 15-Min Discovery Call</span>
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </button>
+            <!-- Before vs After Slider Widget -->
+            <div class="glass border border-white/10 rounded-3xl p-6 sm:p-10 space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-bold theme-gradient-text uppercase tracking-widest">Visual Transformation</span>
+                        <h3 class="text-2xl sm:text-3xl font-black text-white mt-1">Before vs. After</h3>
+                        <p class="text-xs sm:text-sm text-neutral-400">Drag the central slider to see the operational contrast.</p>
+                    </div>
+                </div>
 
-              <button
-                onClick={() => {
-                  playTactilePop(540);
-                  setCurrentTab('portfolio');
-                }}
-                className="px-6 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm border border-white/10 transition-all flex items-center gap-2"
-              >
-                <Eye size={18} className="text-pink-400" />
-                <span>View Case Studies</span>
-              </button>
+                <!-- Slider Container -->
+                <div id="ba-container" class="relative h-80 sm:h-96 rounded-2xl overflow-hidden select-none border border-white/15 shadow-2xl cursor-ew-resize">
+                    <!-- AFTER (Bottom layer) -->
+                    <div class="absolute inset-0 bg-neutral-900 flex flex-col justify-between p-6 sm:p-8">
+                        <div class="flex justify-end">
+                            <span class="px-3.5 py-1.5 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"><i class="fa-solid fa-check-circle"></i> AFTER: Scaled</span>
+                        </div>
+                        <div class="max-w-md ml-auto text-right space-y-4">
+                            <div class="text-emerald-400 font-mono text-xs font-bold">100% INBOX ZERO • AUTOMATED NOTION</div>
+                            <h4 class="text-xl sm:text-2xl font-black text-white">Quiet Mind. Flawless Operations.</h4>
+                            <p class="text-xs sm:text-sm text-neutral-300">VIP emails categorized, draft replies pre-written, and automated CRM tracking.</p>
+                        </div>
+                    </div>
+
+                    <!-- BEFORE (Top layer clipped) -->
+                    <div id="ba-before" class="absolute inset-y-0 left-0 bg-neutral-950/95 border-r-2 theme-border overflow-hidden flex flex-col justify-between p-6 sm:p-8" style="width: 50%;">
+                        <div>
+                            <span class="px-3.5 py-1.5 rounded-full text-xs font-black bg-rose-500/20 text-rose-300 border border-rose-500/40">BEFORE: Chaos</span>
+                        </div>
+                        <div class="max-w-md space-y-4">
+                            <div class="text-rose-400 font-mono text-xs font-bold">1,420 UNREAD EMAILS • CONFLICTS</div>
+                            <h4 class="text-xl sm:text-2xl font-black text-white w-64">Drowning in Low-Leverage Busywork.</h4>
+                            <p class="text-xs sm:text-sm text-neutral-400 w-64">Double-booked Zoom calls, unformatted spreadsheets, and 15+ hours lost weekly.</p>
+                        </div>
+                    </div>
+
+                    <!-- Slider Handle -->
+                    <div id="ba-divider" class="absolute top-0 bottom-0 w-1 theme-gradient-bg flex items-center justify-center -translate-x-1/2" style="left: 50%;">
+                        <div class="w-9 h-9 rounded-full bg-white text-neutral-900 shadow-2xl flex items-center justify-center text-xs border-2 theme-border">
+                            <i class="fa-solid fa-arrows-left-right text-pink-600"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
 
-          {/* Right Visual Bento Card */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-md">
-              <div className="absolute -inset-4 bg-gradient-to-r from-pink-500/30 via-rose-500/30 to-amber-500/30 rounded-3xl blur-2xl opacity-70 group-hover:opacity-100 transition duration-1000 -z-10" />
+            <!-- Interactive Clocks -->
+            <div class="glass border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
+                <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest"><i class="fa-solid fa-globe"></i> Global Availability</span>
+                        <h3 class="text-xl font-black text-white mt-1">Real-Time Sync Engine</h3>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="p-4 rounded-2xl glass-card theme-border border">
+                        <div class="text-[11px] font-bold text-neutral-400 flex justify-between">Manila HQ <span class="text-pink-400">HQ</span></div>
+                        <div id="clock-mnl" class="text-base sm:text-lg font-mono font-black text-white mt-1">--:--:--</div>
+                        <div class="text-[10px] text-neutral-400 mt-1">UTC+8</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="text-[11px] font-bold text-neutral-400">New York</div>
+                        <div id="clock-ny" class="text-base sm:text-lg font-mono font-black text-white mt-1">--:--:--</div>
+                        <div class="text-[10px] text-neutral-400 mt-1">EDT</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="text-[11px] font-bold text-neutral-400">London</div>
+                        <div id="clock-lon" class="text-base sm:text-lg font-mono font-black text-white mt-1">--:--:--</div>
+                        <div class="text-[10px] text-neutral-400 mt-1">BST</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="text-[11px] font-bold text-neutral-400">Sydney</div>
+                        <div id="clock-syd" class="text-base sm:text-lg font-mono font-black text-white mt-1">--:--:--</div>
+                        <div class="text-[10px] text-neutral-400 mt-1">AEST</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-              <div className="relative rounded-3xl bg-neutral-900/80 border border-white/15 p-6 backdrop-blur-2xl shadow-2xl space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-pink-400 shadow-md">
-                      <img
-                        src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80"
-                        alt="Marga Yanos"
-                        className="w-full h-full object-cover"
-                      />
+        <!-- SECTION: RESUME -->
+        <section id="resume" class="nav-section max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+            <div>
+                <span class="text-xs font-bold theme-gradient-text uppercase tracking-widest">Career Credentials</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white mt-1">Experience & Mastery</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Timeline -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-briefcase text-pink-400 mr-2"></i> Timeline</h3>
+                    <div class="border-l-2 border-white/10 ml-4 pl-6 space-y-8">
+                        <div class="relative group">
+                            <div class="absolute -left-[33px] top-1 w-4 h-4 rounded-full bg-neutral-900 border-2 theme-border group-hover:bg-pink-400 transition-all"></div>
+                            <div class="glass-card rounded-3xl p-6">
+                                <span class="text-xs font-mono font-bold text-pink-300 mb-2 block">2023 - Present</span>
+                                <h4 class="text-xl font-black text-white mb-1">Lead Social Strategist & Exec VA</h4>
+                                <div class="text-sm font-semibold text-neutral-300 mb-3">Independent Contractor (Global)</div>
+                                <ul class="space-y-1.5 text-xs text-neutral-400">
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Scaled combined accounts past 10M impressions.</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Automated Notion/Asana workflows reducing ramp-up by 60%.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="relative group">
+                            <div class="absolute -left-[33px] top-1 w-4 h-4 rounded-full bg-neutral-900 border-2 theme-border transition-all"></div>
+                            <div class="glass-card rounded-3xl p-6">
+                                <span class="text-xs font-mono font-bold text-pink-300 mb-2 block">2021 - 2023</span>
+                                <h4 class="text-xl font-black text-white mb-1">Senior Social Media Manager</h4>
+                                <div class="text-sm font-semibold text-neutral-300 mb-3">Elevate Media Collective</div>
+                                <ul class="space-y-1.5 text-xs text-neutral-400">
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Boosted client engagement from 1.2% to 4.9%.</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Created internal CapCut production templates.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-award text-amber-400 mr-2"></i> Core Competencies</h3>
+                    <div class="glass-card rounded-3xl p-6 space-y-5">
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold"><span>Instagram & TikTok Growth</span> <span class="text-pink-300">98%</span></div>
+                            <div class="w-full bg-neutral-800 rounded-full h-2"><div class="theme-gradient-bg h-full rounded-full" style="width: 98%"></div></div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold"><span>Inbox Zero & Triage</span> <span class="text-pink-300">99%</span></div>
+                            <div class="w-full bg-neutral-800 rounded-full h-2"><div class="theme-gradient-bg h-full rounded-full" style="width: 99%"></div></div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold"><span>Notion SOP Architecture</span> <span class="text-pink-300">95%</span></div>
+                            <div class="w-full bg-neutral-800 rounded-full h-2"><div class="theme-gradient-bg h-full rounded-full" style="width: 95%"></div></div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold"><span>Canva Pro & CapCut</span> <span class="text-pink-300">97%</span></div>
+                            <div class="w-full bg-neutral-800 rounded-full h-2"><div class="theme-gradient-bg h-full rounded-full" style="width: 97%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: PORTFOLIO / CASE STUDIES -->
+        <section id="portfolio" class="nav-section max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+            <div class="text-center">
+                <span class="text-xs font-bold theme-gradient-text uppercase tracking-widest">Transformations</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white mt-1">Client Case Studies</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Card 1 -->
+                <div class="glass-card theme-hover rounded-3xl overflow-hidden flex flex-col cursor-pointer" onclick="openModal('modal-casestudy')">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80" alt="Aura" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <span class="text-xs bg-pink-500 text-white px-2 py-1 rounded font-bold">Instagram Growth</span>
+                            <h3 class="text-xl font-black text-white mt-2">Aura Collective: 340% Reach Lift</h3>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <p class="text-xs text-neutral-300">Aesthetic rebranding, 7-second viral hooks, and 15-minute community DM funnels.</p>
+                        <div class="grid grid-cols-2 gap-2 bg-black/30 rounded-xl p-3 border border-white/5">
+                            <div class="text-center">
+                                <div class="text-[10px] text-neutral-400">Follower Gain</div>
+                                <div class="text-sm font-black text-pink-400">+24.8K</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[10px] text-neutral-400">Bio Link CTR</div>
+                                <div class="text-sm font-black text-pink-400">8.4%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card theme-hover rounded-3xl overflow-hidden flex flex-col cursor-pointer" onclick="openModal('modal-casestudy')">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80" alt="B2B" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <span class="text-xs bg-purple-500 text-white px-2 py-1 rounded font-bold">Virtual Assistance</span>
+                            <h3 class="text-xl font-black text-white mt-2">B2B Founder Automation</h3>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <p class="text-xs text-neutral-300">Executive inbox zero, global calendar triage, and 14 comprehensive Notion SOPs.</p>
+                        <div class="grid grid-cols-2 gap-2 bg-black/30 rounded-xl p-3 border border-white/5">
+                            <div class="text-center">
+                                <div class="text-[10px] text-neutral-400">Hours Saved</div>
+                                <div class="text-sm font-black text-pink-400">22 Hrs/Wk</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-[10px] text-neutral-400">Conflicts</div>
+                                <div class="text-sm font-black text-pink-400">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: AESTHETIC FEED -->
+        <section id="feed" class="nav-section max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-10">
+            <div class="text-center">
+                <span class="text-xs font-bold theme-gradient-text uppercase tracking-widest">Showcase</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white mt-1">Curated Social Grid</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div class="relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer group" onclick="showToast('Viewing Post Metrics...')">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center">
+                        <div class="text-white font-bold"><i class="fa-solid fa-heart mr-1"></i> 14.2K</div>
+                        <div class="text-white font-bold"><i class="fa-solid fa-eye mr-1"></i> 124K</div>
+                    </div>
+                    <div class="absolute top-2 left-2 bg-black/70 text-white text-[10px] px-2 py-1 rounded-full"><i class="fa-solid fa-video"></i> Reel</div>
+                </div>
+                <div class="relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer group" onclick="showToast('Viewing Post Metrics...')">
+                    <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center">
+                        <div class="text-white font-bold"><i class="fa-solid fa-heart mr-1"></i> 6.8K</div>
+                    </div>
+                    <div class="absolute top-2 left-2 bg-black/70 text-white text-[10px] px-2 py-1 rounded-full"><i class="fa-solid fa-images"></i> Carousel</div>
+                </div>
+                <div class="relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer group" onclick="showToast('Viewing Post Metrics...')">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all">
+                    <div class="absolute top-2 left-2 bg-black/70 text-white text-[10px] px-2 py-1 rounded-full"><i class="fa-solid fa-video"></i> Reel</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: DELIVERABLES VAULT -->
+        <section id="vault" class="nav-section max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-10">
+            <div class="text-center">
+                <span class="text-xs font-bold theme-gradient-text uppercase tracking-widest">Tangible Work</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white mt-1">Interactive Vault</h2>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-2">
+                <button onclick="switchVault('v-cal')" id="btn-v-cal" class="vault-btn px-4 py-2.5 rounded-full text-xs font-bold theme-gradient-bg text-white"><i class="fa-solid fa-calendar mr-1"></i> Content Calendar</button>
+                <button onclick="switchVault('v-brief')" id="btn-v-brief" class="vault-btn px-4 py-2.5 rounded-full text-xs font-bold bg-white/5 text-neutral-300"><i class="fa-solid fa-file-lines mr-1"></i> Daily Brief</button>
+            </div>
+
+            <div class="glass border border-white/10 rounded-3xl p-6 sm:p-10">
+                <!-- Vault Content 1 -->
+                <div id="v-cal" class="vault-content block space-y-4">
+                    <h3 class="text-xl font-black text-white border-b border-white/10 pb-4">Airtable Content Sprint Mockup</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-pink-500/10 border border-pink-500/30 rounded-2xl">
+                            <div class="text-xs font-bold text-white mb-1">Monday (Reel)</div>
+                            <div class="text-sm font-semibold text-neutral-200">Behind the Scenes: Launch</div>
+                            <div class="text-[11px] text-pink-300 mt-2">Status: Scheduled</div>
+                        </div>
+                        <div class="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl">
+                            <div class="text-xs font-bold text-white mb-1">Wednesday (Carousel)</div>
+                            <div class="text-sm font-semibold text-neutral-200">5 Steps to Delegation</div>
+                            <div class="text-[11px] text-amber-300 mt-2">Status: Editing</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vault Content 2 -->
+                <div id="v-brief" class="vault-content hidden space-y-4">
+                    <h3 class="text-xl font-black text-white border-b border-white/10 pb-4">C-Level Morning Briefing</h3>
+                    <ul class="space-y-3 text-xs sm:text-sm text-neutral-300">
+                        <li class="bg-black/30 p-3 rounded-lg border border-white/5"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> <strong>Sequoia Partner:</strong> Rescheduled to 3PM EST.</li>
+                        <li class="bg-black/30 p-3 rounded-lg border border-white/5"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> <strong>Flight AA-104:</strong> JFK to LHR confirmed. Pass in Wallet.</li>
+                        <li class="bg-black/30 p-3 rounded-lg border border-white/5"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> <strong>Inbox Triage:</strong> 12 cold emails archived, 3 VIPs drafted.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: SERVICES & CALCULATOR -->
+        <section id="services" class="nav-section max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-16">
+            
+            <div class="text-center">
+                <span class="text-xs font-bold theme-gradient-text uppercase tracking-widest">Financial Logic</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white mt-1">Packages & ROI</h2>
+            </div>
+
+            <!-- ROI Calculator -->
+            <div class="glass border border-white/10 rounded-3xl p-6 sm:p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-white">Value Calculator</h3>
+                    
+                    <div>
+                        <div class="flex justify-between text-xs mb-2"><span>Admin Hours Lost/Wk</span> <span id="val-hours" class="font-bold text-pink-400">15 hrs</span></div>
+                        <input type="range" id="roi-hours" min="5" max="40" value="15" oninput="calculateROI()">
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-xs mb-2"><span>Your Hourly CEO Value</span> <span id="val-rate" class="font-bold text-amber-400">$125</span></div>
+                        <input type="range" id="roi-rate" min="50" max="500" step="25" value="125" oninput="calculateROI()">
+                    </div>
+                </div>
+
+                <div class="bg-black/40 rounded-2xl p-6 border border-white/5 flex flex-col justify-center">
+                    <div class="text-xs text-neutral-400 uppercase font-semibold">Monthly Value Burned</div>
+                    <div id="roi-lost" class="text-4xl font-black text-rose-400 mt-1">$8,062</div>
+                    <p class="text-xs text-neutral-500 mt-4">Stop wasting high-leverage time. Hire an expert for a fraction of your lost revenue.</p>
+                    <button onclick="navigate('contact')" class="mt-6 w-full py-3 rounded-full theme-gradient-bg text-white text-xs font-bold">Reclaim Time</button>
+                </div>
+            </div>
+
+            <!-- Packages -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Starter</h3>
+                        <div class="text-3xl font-black theme-gradient-text mt-2">$950<span class="text-xs text-neutral-400">/mo</span></div>
+                        <ul class="text-xs text-neutral-300 mt-4 space-y-2">
+                            <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> 12 Posts / Reels</li>
+                            <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> 5 Hrs Exec Support</li>
+                        </ul>
+                    </div>
+                    <button onclick="navigate('contact')" class="mt-6 w-full py-2.5 bg-white/10 rounded-full text-xs font-bold text-white hover:bg-white/20">Select</button>
+                </div>
+
+                <div class="glass-card theme-border border p-6 rounded-3xl flex flex-col justify-between relative transform md:-translate-y-4 shadow-xl shadow-pink-500/20">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 theme-gradient-bg text-[10px] font-bold px-3 py-1 rounded-full text-white">POPULAR</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Growth Partner</h3>
+                        <div class="text-3xl font-black theme-gradient-text mt-2">$1,850<span class="text-xs text-neutral-400">/mo</span></div>
+                        <ul class="text-xs text-neutral-300 mt-4 space-y-2">
+                            <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> 20 Posts / Reels</li>
+                            <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> 15 Hrs Exec Support</li>
+                            <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Inbox Zero Automation</li>
+                        </ul>
+                    </div>
+                    <button onclick="navigate('contact')" class="mt-6 w-full py-2.5 theme-gradient-bg rounded-full text-xs font-bold text-white">Select</button>
+                </div>
+
+                <div class="glass-card p-6 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">VIP Suite</h3>
+                        <div class="text-3xl font-black theme-gradient-text mt-2">$2,950<span class="text-xs text-neutral-400">/mo</span></div>
+                        <ul class="text-xs text-neutral-300 mt-4 space-y-2">
+                            <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> 30 Multi-Platform Posts</li>
+                            <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> 25 Hrs Exec Support</li>
+                        </ul>
+                    </div>
+                    <button onclick="navigate('contact')" class="mt-6 w-full py-2.5 bg-white/10 rounded-full text-xs font-bold text-white hover:bg-white/20">Select</button>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="max-w-3xl mx-auto space-y-4 pt-10">
+                <h3 class="text-2xl font-black text-center mb-6">Frequently Asked Questions</h3>
+                <div class="faq-item glass-card rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="p-4 font-bold text-sm flex justify-between items-center text-white">
+                        Time zone differences? <i class="fa-solid fa-chevron-down text-pink-400 transition-transform"></i>
+                    </div>
+                    <div class="faq-ans hidden px-4 pb-4 text-xs text-neutral-400">I am based in Manila (UTC+8) and provide daily overlaps with EST, PST, and BST.</div>
+                </div>
+                <div class="faq-item glass-card rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="p-4 font-bold text-sm flex justify-between items-center text-white">
+                        Do I need to sign a contract? <i class="fa-solid fa-chevron-down text-pink-400 transition-transform"></i>
+                    </div>
+                    <div class="faq-ans hidden px-4 pb-4 text-xs text-neutral-400">Retainers start with a 30-day trial, then move month-to-month with 14-day cancellation notice.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: CONTACT -->
+        <section id="contact" class="nav-section max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-10">
+            <div class="text-center">
+                <span class="text-xs font-bold theme-gradient-text uppercase tracking-widest">Connect</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white mt-1">Book Discovery Call</h2>
+            </div>
+            
+            <div class="glass border border-white/10 rounded-3xl p-6 sm:p-10">
+                <form id="contactForm" onsubmit="submitForm(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-semibold text-neutral-300 block mb-1">Name</label>
+                            <input required type="text" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-pink-500">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-neutral-300 block mb-1">Email</label>
+                            <input required type="email" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-pink-500">
+                        </div>
                     </div>
                     <div>
-                      <h2 className="text-white font-bold text-base flex items-center gap-1.5">
-                        Marga Yanos
-                        <CheckCircle2 size={16} className="text-pink-400 fill-pink-400/20" />
-                      </h2>
-                      <p className="text-xs text-pink-300 font-medium">Digital Ops & Social Strategist</p>
+                        <label class="text-xs font-semibold text-neutral-300 block mb-1">Message / Current Bottleneck</label>
+                        <textarea required rows="4" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-pink-500 resize-none"></textarea>
                     </div>
-                  </div>
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-bold text-emerald-400">
-                    Active Roster
-                  </span>
+                    <button type="submit" class="w-full py-4 rounded-xl theme-gradient-bg text-white font-black shadow-lg">Send Request</button>
+                </form>
+                <div id="contactSuccess" class="hidden text-center py-10">
+                    <i class="fa-solid fa-circle-check text-4xl text-emerald-400 mb-4"></i>
+                    <h3 class="text-2xl font-black text-white">Received!</h3>
+                    <p class="text-sm text-neutral-400 mt-2">I'll reach out within 12 hours with calendar slots.</p>
+                    <button onclick="document.getElementById('contactSuccess').classList.add('hidden'); document.getElementById('contactForm').classList.remove('hidden');" class="mt-6 px-4 py-2 bg-white/10 rounded-full text-xs">Send another</button>
                 </div>
-
-                <div className="space-y-3 bg-neutral-950/60 rounded-2xl p-4 border border-white/5">
-                  <div className="flex items-center justify-between text-xs text-neutral-400">
-                    <span className="font-semibold text-neutral-200 flex items-center gap-1.5">
-                      <TrendingUp size={14} className="text-emerald-400" />
-                      Quarterly Organic Engagement
-                    </span>
-                    <span className="text-emerald-400 font-mono font-bold">+340% Lift</span>
-                  </div>
-                  <div className="w-full bg-neutral-800 rounded-full h-3 overflow-hidden p-0.5">
-                    <div className="bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400 h-full rounded-full w-[88%] animate-pulse" />
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 pt-2 text-center text-[10px]">
-                    <div className="bg-white/5 rounded-xl p-2">
-                      <div className="text-neutral-400">Viral Shorts</div>
-                      <div className="text-sm font-bold text-white mt-0.5">1.4M</div>
-                    </div>
-                    <div className="bg-white/5 rounded-xl p-2">
-                      <div className="text-neutral-400">Email Leads</div>
-                      <div className="text-sm font-bold text-white mt-0.5">+3,820</div>
-                    </div>
-                    <div className="bg-white/5 rounded-xl p-2">
-                      <div className="text-neutral-400">Founder Hrs</div>
-                      <div className="text-sm font-bold text-white mt-0.5">+88h/mo</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 text-xs">
-                  {['✨ Hook Scripts', '⚡ Notion SOPs', '🎯 Inbox Zero', '📈 Meta Insights', '📅 5-Zone Cal'].map((pill, i) => (
-                    <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-300">
-                      {pill}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Interactive Timezone Live Clock */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        {renderTimezoneClocks()}
-      </section>
+    </main>
 
-      {/* Interactive Before vs After Slider Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        {renderComparisonTool()}
-      </section>
-
-      {/* 4-Step Onboarding Roadmap */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        {renderOnboardingRoadmap()}
-      </section>
-    </div>
-  );
-
-  const renderResume = () => (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-16">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
-        <div>
-          <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Career Credentials</span>
-          <h2 className="text-3xl sm:text-5xl font-black text-white mt-1">
-            Experience & Mastery
-          </h2>
-          <p className="text-neutral-400 text-sm max-w-xl mt-2">
-            A proven track record blending high-conversion creative direction with executive operational precision.
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            playTactilePop(620);
-            setShowResumeModal(true);
-          }}
-          className="px-5 py-3 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-pink-500/20 hover:scale-105 active:scale-95 transition-all self-start md:self-auto"
-        >
-          <Download size={15} />
-          <span>Generate Clean CV View</span>
+    <!-- Floating Action Button (FAB) -->
+    <div class="fixed bottom-24 lg:bottom-8 right-5 z-40">
+        <button onclick="navigate('contact'); showToast('Booking Call...')" class="w-14 h-14 rounded-full theme-gradient-bg text-white shadow-2xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-xl">
+            <i class="fa-solid fa-message"></i>
         </button>
-      </div>
+    </div>
 
-      {/* Timeline */}
-      <div className="space-y-6">
-        <h3 className="text-xl font-bold text-white flex items-center gap-2">
-          <Briefcase size={20} className="text-pink-400" />
-          <span>Professional Experience Timeline</span>
-        </h3>
+    <!-- Mobile Bottom Dock Navigation -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 glass border-t border-white/10 px-2 py-2 flex items-center justify-around pb-safe">
+        <button onclick="navigate('home')" class="nav-btn-mobile text-neutral-400 flex flex-col items-center p-2" data-target="home">
+            <i class="fa-solid fa-house mb-1"></i><span class="text-[10px]">Home</span>
+        </button>
+        <button onclick="navigate('portfolio')" class="nav-btn-mobile text-neutral-400 flex flex-col items-center p-2" data-target="portfolio">
+            <i class="fa-solid fa-eye mb-1"></i><span class="text-[10px]">Work</span>
+        </button>
+        <button onclick="navigate('feed')" class="nav-btn-mobile text-neutral-400 flex flex-col items-center p-2" data-target="feed">
+            <i class="fa-solid fa-mobile-screen mb-1"></i><span class="text-[10px]">Feed</span>
+        </button>
+        <button onclick="navigate('services')" class="nav-btn-mobile text-neutral-400 flex flex-col items-center p-2" data-target="services">
+            <i class="fa-solid fa-calculator mb-1"></i><span class="text-[10px]">Rates</span>
+        </button>
+        <button onclick="navigate('contact')" class="nav-btn-mobile text-neutral-400 flex flex-col items-center p-2" data-target="contact">
+            <i class="fa-solid fa-calendar mb-1"></i><span class="text-[10px]">Book</span>
+        </button>
+    </nav>
 
-        <div className="relative border-l-2 border-white/10 ml-4 pl-6 space-y-10">
-          {EXPERIENCE_TIMELINE.map((item, idx) => (
-            <div key={idx} className="relative group">
-              <div className="absolute -left-[33px] top-1 w-4 h-4 rounded-full bg-neutral-900 border-2 border-pink-400 group-hover:scale-125 group-hover:bg-pink-400 transition-all" />
-              <div className="bg-neutral-900/60 border border-white/10 hover:border-pink-500/40 rounded-3xl p-6 sm:p-8 backdrop-blur-xl transition-all duration-300">
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-mono font-bold text-pink-300">{item.year}</span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold border ${item.badgeColor}`}>
-                    {item.badge}
-                  </span>
+    <!-- Modal Base (Bottom Sheet on Mobile) -->
+    <div id="base-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm transition-opacity">
+        <div class="modal-container absolute inset-0 flex items-center justify-center p-0 md:p-4">
+            <div class="modal-content w-full max-w-2xl bg-neutral-900 border border-white/10 md:rounded-3xl p-6 relative shadow-2xl transform transition-transform translate-y-full md:translate-y-0 overflow-y-auto">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <div id="modal-body" class="pt-4 text-white">
+                    <!-- Dynamic content injected here -->
                 </div>
-                <h4 className="text-xl font-black text-white mb-1">{item.role}</h4>
-                <div className="text-sm font-semibold text-rose-300 mb-3 flex items-center gap-2">
-                  <span>{item.company}</span>
-                  <span>•</span>
-                  <span className="text-neutral-400 font-normal">{item.location} ({item.type})</span>
-                </div>
-                <p className="text-neutral-300 text-xs sm:text-sm mb-4 leading-relaxed">{item.summary}</p>
-                <div className="space-y-2">
-                  <div className="text-xs font-bold text-neutral-200 uppercase tracking-wider">Key Impact & KPIs:</div>
-                  <ul className="space-y-1.5">
-                    {item.achievements.map((ach, aIdx) => (
-                      <li key={aIdx} className="text-xs sm:text-sm text-neutral-300 flex items-start gap-2">
-                        <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
-                        <span>{ach}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
             </div>
-          ))}
         </div>
-      </div>
+    </div>
 
-      {/* Skills Matrix */}
-      <div className="space-y-8 pt-6">
-        <div>
-          <h3 className="text-xl font-bold text-white flex items-center gap-2">
-            <Award size={20} className="text-amber-400" />
-            <span>Core Competencies & Tool Stack</span>
-          </h3>
-          <p className="text-neutral-400 text-xs mt-1">Evaluated proficiency levels based on 5+ years of remote leadership.</p>
-        </div>
+    <script>
+        // --- Navigation ---
+        function navigate(targetId) {
+            // Hide all sections
+            document.querySelectorAll('.nav-section').forEach(sec => sec.classList.remove('active'));
+            // Show target
+            document.getElementById(targetId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {SKILL_CATEGORIES.map((cat, catIdx) => (
-            <div
-              key={catIdx}
-              className="bg-neutral-900/60 border border-white/10 rounded-3xl p-6 backdrop-blur-xl space-y-5"
-            >
-              <h4 className="text-base font-bold text-white pb-2 border-b border-white/10 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300">
-                {cat.category}
-              </h4>
-              <div className="space-y-4">
-                {cat.skills.map((skill, sIdx) => (
-                  <div key={sIdx} className="space-y-1.5">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-semibold text-white">{skill.name}</span>
-                      <span className="font-mono text-pink-300 font-bold">{skill.level}%</span>
+            // Update Desktop Nav
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.dataset.target === targetId) {
+                    btn.className = 'nav-btn px-3.5 py-1.5 text-xs font-bold rounded-full theme-gradient-bg text-white shadow-md transition-all scale-105';
+                } else {
+                    btn.className = 'nav-btn px-3.5 py-1.5 text-xs font-semibold rounded-full text-neutral-300 hover:text-white hover:bg-white/5 transition-all';
+                }
+            });
+
+            // Update Mobile Nav
+            document.querySelectorAll('.nav-btn-mobile').forEach(btn => {
+                if(btn.dataset.target === targetId) {
+                    btn.classList.add('text-pink-400', 'scale-110', 'font-bold');
+                    btn.classList.remove('text-neutral-400');
+                } else {
+                    btn.classList.remove('text-pink-400', 'scale-110', 'font-bold');
+                    btn.classList.add('text-neutral-400');
+                }
+            });
+        }
+
+        // Initialize active tab
+        document.addEventListener('DOMContentLoaded', () => {
+            navigate('home');
+            updateClocks();
+            setInterval(updateClocks, 1000);
+        });
+
+        // --- Theme Toggler ---
+        const themes = ['vibrant', 'cosmic', 'emerald'];
+        let currentThemeIdx = 0;
+        function toggleTheme() {
+            currentThemeIdx = (currentThemeIdx + 1) % themes.length;
+            document.body.setAttribute('data-theme', themes[currentThemeIdx]);
+            showToast('Theme Updated: ' + themes[currentThemeIdx].toUpperCase());
+            playPop();
+        }
+
+        // --- Toast / Sound ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 3000);
+        }
+
+        function playPop() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.1);
+            } catch(e) { }
+        }
+
+        // --- Before/After Slider Logic ---
+        const baContainer = document.getElementById('ba-container');
+        const baBefore = document.getElementById('ba-before');
+        const baDivider = document.getElementById('ba-divider');
+        let isDragging = false;
+
+        function updateSliderPosition(x) {
+            const rect = baContainer.getBoundingClientRect();
+            let pos = Math.max(0, Math.min(x - rect.left, rect.width));
+            let percent = (pos / rect.width) * 100;
+            baBefore.style.width = percent + '%';
+            baDivider.style.left = percent + '%';
+        }
+
+        baContainer.addEventListener('mousedown', (e) => { isDragging = true; updateSliderPosition(e.clientX); });
+        baContainer.addEventListener('touchstart', (e) => { isDragging = true; updateSliderPosition(e.touches[0].clientX); }, {passive: true});
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('touchend', () => isDragging = false);
+        window.addEventListener('mousemove', (e) => { if (isDragging) updateSliderPosition(e.clientX); });
+        window.addEventListener('touchmove', (e) => { if (isDragging) updateSliderPosition(e.touches[0].clientX); }, {passive: true});
+
+        // --- Clocks ---
+        function updateClocks() {
+            const now = new Date();
+            const opts = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            try {
+                document.getElementById('clock-mnl').innerText = now.toLocaleTimeString('en-US', { ...opts, timeZone: 'Asia/Manila' });
+                document.getElementById('clock-ny').innerText = now.toLocaleTimeString('en-US', { ...opts, timeZone: 'America/New_York' });
+                document.getElementById('clock-lon').innerText = now.toLocaleTimeString('en-US', { ...opts, timeZone: 'Europe/London' });
+                document.getElementById('clock-syd').innerText = now.toLocaleTimeString('en-US', { ...opts, timeZone: 'Australia/Sydney' });
+            } catch(e) {}
+        }
+
+        // --- Deliverables Vault ---
+        function switchVault(target) {
+            document.querySelectorAll('.vault-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.vault-btn').forEach(btn => {
+                btn.className = 'vault-btn px-4 py-2.5 rounded-full text-xs font-bold bg-white/5 text-neutral-300 transition-all';
+            });
+            document.getElementById(target).classList.remove('hidden');
+            document.getElementById('btn-' + target).className = 'vault-btn px-4 py-2.5 rounded-full text-xs font-bold theme-gradient-bg text-white shadow-lg scale-105 transition-all';
+            playPop();
+        }
+
+        // --- ROI Calculator ---
+        function calculateROI() {
+            const hrs = document.getElementById('roi-hours').value;
+            const rate = document.getElementById('roi-rate').value;
+            document.getElementById('val-hours').innerText = hrs + ' hrs';
+            document.getElementById('val-rate').innerText = '$' + rate;
+            
+            // Formula: hours * rate * 4.3 weeks
+            let lost = hrs * rate * 4.3;
+            document.getElementById('roi-lost').innerText = '$' + Math.round(lost).toLocaleString();
+        }
+
+        // --- FAQ Accordion ---
+        function toggleFaq(el) {
+            const ans = el.querySelector('.faq-ans');
+            const icon = el.querySelector('i');
+            if (ans.classList.contains('hidden')) {
+                ans.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                ans.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+            playPop();
+        }
+
+        // --- Modals ---
+        function openModal(type) {
+            const modal = document.getElementById('base-modal');
+            const content = document.querySelector('.modal-content');
+            
+            let html = '';
+            if(type === 'modal-casestudy') {
+                html = `
+                    <span class="text-[10px] bg-pink-500 text-white px-2 py-1 rounded">Case Study</span>
+                    <h3 class="text-2xl font-black mt-3">Aura Collective Breakdown</h3>
+                    <p class="text-sm text-neutral-300 mt-2 border-b border-white/10 pb-4">Full strategy deep dive on how we scaled from 1% to 8.4% bio CTR in 4 months.</p>
+                    <div class="mt-4 grid grid-cols-2 gap-2">
+                        <div class="bg-white/5 p-3 rounded-lg"><div class="text-[10px] text-neutral-400">Phase 1</div><div class="font-bold text-sm">Visual Rebrand</div></div>
+                        <div class="bg-white/5 p-3 rounded-lg"><div class="text-[10px] text-neutral-400">Phase 2</div><div class="font-bold text-sm">Viral Reels</div></div>
                     </div>
-                    <div className="w-full bg-neutral-800 rounded-full h-2 overflow-hidden">
-                      <div
-                        className="bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400 h-full rounded-full transition-all duration-1000"
-                        style={{ width: `${skill.level}%` }}
-                      />
-                    </div>
-                    <div className="text-[10px] text-neutral-400 italic">{skill.highlight}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+                `;
+            }
+            document.getElementById('modal-body').innerHTML = html;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => content.classList.remove('translate-y-full'), 10);
+            playPop();
+        }
 
-  const renderPortfolio = () => (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-12">
-      <div className="text-center max-w-3xl mx-auto space-y-3">
-        <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Verified Transformations</span>
-        <h2 className="text-3xl sm:text-5xl font-black text-white">
-          Client Case Studies
-        </h2>
-        <p className="text-neutral-400 text-xs sm:text-sm">
-          Measurable KPIs, organic scaling, and executive operations delivered for founders worldwide.
-        </p>
-      </div>
+        function closeModal() {
+            const modal = document.getElementById('base-modal');
+            const content = document.querySelector('.modal-content');
+            content.classList.add('translate-y-full');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {CASE_STUDIES.map((cs) => (
-          <div
-            key={cs.id}
-            className="group relative rounded-3xl bg-neutral-900/60 border border-white/10 hover:border-pink-500/40 backdrop-blur-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between"
-          >
-            <div className="relative h-64 overflow-hidden">
-              <img
-                src={cs.highlightImage}
-                alt={cs.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent" />
-              <div className="absolute top-4 left-4">
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-neutral-950/80 text-pink-300 border border-pink-500/30 backdrop-blur-md">
-                  {cs.category}
-                </span>
-              </div>
-              <div className="absolute top-4 right-4">
-                <span className="px-3 py-1 rounded-full text-xs font-black bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md">
-                  {cs.heroMetric}
-                </span>
-              </div>
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="text-xs text-neutral-400 font-medium">{cs.client}</div>
-                <h3 className="text-xl font-black text-white group-hover:text-pink-300 transition-colors">
-                  {cs.title}
-                </h3>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">{cs.overview}</p>
-              <div className="grid grid-cols-2 gap-2 bg-neutral-950/60 rounded-2xl p-3 border border-white/5">
-                {cs.stats.slice(0, 2).map((s, sIdx) => (
-                  <div key={sIdx} className="text-center">
-                    <div className="text-[10px] text-neutral-400">{s.label}</div>
-                    <div className="text-sm font-black text-pink-400">{s.val}</div>
-                    <span className="text-[9px] text-emerald-400 font-semibold">{s.delta}</span>
-                  </div>
-                ))}
-              </div>
-              <button
-                onClick={() => {
-                  playTactilePop(640);
-                  setSelectedCaseStudy(cs);
-                }}
-                className="w-full py-3 rounded-2xl bg-white/5 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs border border-white/10 transition-all flex items-center justify-center gap-2 group-hover:border-pink-500/50"
-              >
-                <span>Read Full Transformation Breakdown</span>
-                <ChevronRight size={15} />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderServices = () => (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-16">
-      <div className="text-center max-w-3xl mx-auto space-y-3">
-        <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Predictable Retainers</span>
-        <h2 className="text-3xl sm:text-5xl font-black text-white">
-          Monthly Partnership Packages
-        </h2>
-        <p className="text-neutral-400 text-xs sm:text-sm">
-          No hidden fees. Full-service social media management paired with executive administrative support.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {BASE_PACKAGES.map((pkg) => (
-          <div
-            key={pkg.id}
-            className={`relative rounded-3xl p-8 backdrop-blur-xl border transition-all duration-300 flex flex-col justify-between ${pkg.color} ${
-              pkg.popular ? 'lg:-translate-y-3' : ''
-            }`}
-          >
-            {pkg.popular && (
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg">
-                Most Popular for Scaling
-              </div>
-            )}
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-2xl font-black text-white">{pkg.name}</h3>
-                <p className="text-xs text-neutral-300 mt-1 min-h-[36px]">{pkg.tagline}</p>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl sm:text-5xl font-black text-white">${pkg.price}</span>
-                <span className="text-xs text-neutral-400 font-semibold">{pkg.period}</span>
-              </div>
-              <div className="space-y-3 pt-4 border-t border-white/10">
-                <div className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Included:</div>
-                <ul className="space-y-2.5">
-                  {pkg.features.map((feat, fIdx) => (
-                    <li key={fIdx} className="text-xs sm:text-sm text-neutral-200 flex items-start gap-2.5">
-                      <Check size={16} className="text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="pt-8">
-              <button
-                onClick={() => {
-                  triggerConfetti();
-                  setCustomTier(pkg.id);
-                  setFormData(prev => ({ ...prev, serviceNeeded: pkg.name }));
-                  setCurrentTab('contact');
-                }}
-                className={`w-full py-4 rounded-2xl font-bold text-xs transition-all ${
-                  pkg.popular
-                    ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white shadow-xl shadow-pink-500/25 hover:brightness-110 active:scale-95'
-                    : 'bg-white/10 hover:bg-white/20 text-white border border-white/10 active:scale-95'
-                }`}
-              >
-                Choose {pkg.name}
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Interactive Retainer Builder */}
-      <div className="rounded-3xl bg-neutral-900/80 border border-white/15 p-6 sm:p-10 backdrop-blur-2xl space-y-8">
-        <div>
-          <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Interactive Customizer</span>
-          <h3 className="text-2xl sm:text-3xl font-black text-white mt-1">
-            Build Your Tailored Monthly Scope
-          </h3>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 space-y-6">
-            <div>
-              <label className="text-xs font-bold text-neutral-300 block mb-2 uppercase">1. Core Retainer Tier</label>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { id: 'starter', label: 'Starter ($950)' },
-                  { id: 'growth', label: 'Growth ($1,850)' },
-                  { id: 'vip', label: 'VIP ($2,950)' }
-                ].map((tier) => (
-                  <button
-                    key={tier.id}
-                    onClick={() => {
-                      playTactilePop(520);
-                      setCustomTier(tier.id);
-                    }}
-                    className={`py-2.5 px-3 rounded-xl text-xs font-bold border transition-all ${
-                      customTier === tier.id
-                        ? 'bg-pink-500/20 border-pink-500 text-pink-300'
-                        : 'bg-white/5 border-white/10 text-neutral-300'
-                    }`}
-                  >
-                    {tier.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-bold text-neutral-300 block mb-2 uppercase">2. Add-on Support</label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { state: addonEmailTriage, setter: setAddonEmailTriage, title: 'VIP Inbox Triage', price: '+$250/mo' },
-                  { state: addonReelBatch, setter: setAddonReelBatch, title: 'Extra 8 Viral Reels', price: '+$400/mo' },
-                  { state: addonNotionSOP, setter: setAddonNotionSOP, title: 'Notion SOP Workspace', price: '+$350/mo' },
-                  { state: addonInfluencerPR, setter: setAddonInfluencerPR, title: 'Influencer PR Outreach', price: '+$500/mo' }
-                ].map((addon, aIdx) => (
-                  <div
-                    key={aIdx}
-                    onClick={() => {
-                      playTactilePop(540);
-                      addon.setter(!addon.state);
-                    }}
-                    className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-center justify-between ${
-                      addon.state ? 'bg-pink-500/10 border-pink-500/40' : 'bg-white/5 border-white/10'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className={`w-4 h-4 rounded flex items-center justify-center border ${addon.state ? 'bg-pink-500 border-pink-500 text-white' : 'border-neutral-500'}`}>
-                        {addon.state && <Check size={11} />}
-                      </div>
-                      <span className="text-xs font-bold text-white">{addon.title}</span>
-                    </div>
-                    <span className="text-xs font-mono text-pink-300 font-bold">{addon.price}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 bg-neutral-950/80 rounded-2xl border border-white/10 p-6 space-y-4 text-center">
-            <span className="text-xs font-bold text-neutral-400 uppercase">Estimated Monthly Investment</span>
-            <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-rose-400 to-amber-300">
-              ${calculatedCustomPrice.toLocaleString()}
-            </div>
-            <button
-              onClick={() => {
-                triggerConfetti();
-                setFormData(prev => ({
-                  ...prev,
-                  monthlyBudget: `$${calculatedCustomPrice.toLocaleString()} Custom Retainer`
-                }));
-                setCurrentTab('contact');
-              }}
-              className="w-full py-3.5 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400 text-white font-extrabold text-xs shadow-lg shadow-pink-500/25 active:scale-95 transition-all"
-            >
-              Lock In This Package
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderCalculator = () => (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-12">
-      <div className="text-center max-w-2xl mx-auto space-y-3">
-        <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Financial Logic</span>
-        <h2 className="text-3xl sm:text-5xl font-black text-white">
-          Client ROI & Hours Calculator
-        </h2>
-        <p className="text-neutral-400 text-xs sm:text-sm">
-          Calculate the monetary value you lose on administrative busywork each week—and your projected net gain.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-neutral-900/70 border border-white/10 rounded-3xl p-8 backdrop-blur-2xl">
-        <div className="lg:col-span-6 space-y-6">
-          <div className="space-y-2">
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-white font-bold">Hours Spent on Socials & Admin / Week</span>
-              <span className="text-pink-300 font-mono font-bold text-sm">{founderHoursWaste} Hours</span>
-            </div>
-            <input
-              type="range"
-              min="5"
-              max="40"
-              value={founderHoursWaste}
-              onChange={(e) => {
-                playTactilePop(500);
-                setFounderHoursWaste(Number(e.target.value));
-              }}
-              className="w-full accent-pink-500 cursor-pointer h-2 bg-neutral-800 rounded-lg"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-white font-bold">Your Hourly CEO Value</span>
-              <span className="text-rose-300 font-mono font-bold text-sm">${founderHourlyRate} / hr</span>
-            </div>
-            <input
-              type="range"
-              min="50"
-              max="500"
-              step="25"
-              value={founderHourlyRate}
-              onChange={(e) => {
-                playTactilePop(500);
-                setFounderHourlyRate(Number(e.target.value));
-              }}
-              className="w-full accent-rose-500 cursor-pointer h-2 bg-neutral-800 rounded-lg"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-white font-bold">Current Audience Followers</span>
-              <span className="text-amber-300 font-mono font-bold text-sm">{currentMonthlyFollowers.toLocaleString()}</span>
-            </div>
-            <input
-              type="range"
-              min="500"
-              max="50000"
-              step="500"
-              value={currentMonthlyFollowers}
-              onChange={(e) => {
-                playTactilePop(500);
-                setCurrentMonthlyFollowers(Number(e.target.value));
-              }}
-              className="w-full accent-amber-500 cursor-pointer h-2 bg-neutral-800 rounded-lg"
-            />
-          </div>
-        </div>
-
-        <div className="lg:col-span-6 bg-neutral-950/80 rounded-2xl border border-white/10 p-6 space-y-6">
-          <div className="border-b border-white/10 pb-4">
-            <div className="text-xs text-neutral-400 uppercase font-semibold">Value Burned on Manual Tasks</div>
-            <div className="text-3xl font-black text-rose-400 mt-1">
-              ${Math.round(roiCalculations.monthlyValueLost).toLocaleString()}{' '}
-              <span className="text-xs text-neutral-400 font-normal">/ month lost</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 rounded-xl p-3 border border-white/5">
-              <div className="text-[10px] text-neutral-400 font-medium">Monthly CEO Hours Restored</div>
-              <div className="text-2xl font-black text-emerald-400 mt-0.5">
-                ~{Math.round(roiCalculations.estimatedHoursRecovered * 4.3)} hrs
-              </div>
-            </div>
-            <div className="bg-white/5 rounded-xl p-3 border border-white/5">
-              <div className="text-[10px] text-neutral-400 font-medium">Net Value Reclaimed</div>
-              <div className="text-2xl font-black text-pink-400 mt-0.5">
-                ${Math.round(roiCalculations.monthlyNetFounderValueGained).toLocaleString()}
-              </div>
-            </div>
-          </div>
-
-          <button
-            onClick={() => {
-              triggerConfetti();
-              setCurrentTab('contact');
-            }}
-            className="w-full py-3.5 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400 text-white font-extrabold text-xs shadow-lg shadow-pink-500/25 active:scale-95 transition-all"
-          >
-            Reclaim Your Time — Book Discovery Call
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderContact = () => (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-12">
-      <div className="text-center max-w-2xl mx-auto space-y-3">
-        <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Let’s Connect</span>
-        <h2 className="text-3xl sm:text-5xl font-black text-white">
-          Book a 15-Minute Discovery Call
-        </h2>
-        <p className="text-neutral-400 text-xs sm:text-sm">
-          Discuss your brand objectives, see if our vibes align, and receive a customized onboarding roadmap.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-5 space-y-6">
-          <div className="bg-neutral-900/70 border border-white/10 rounded-3xl p-6 backdrop-blur-xl space-y-5">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Coffee size={18} className="text-amber-400" />
-              <span>Direct Channels</span>
-            </h3>
-
-            <div className="space-y-3">
-              <div
-                onClick={handleCopyEmail}
-                className="p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer transition-colors flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center">
-                    <Mail size={18} />
-                  </div>
-                  <div>
-                    <div className="text-xs text-neutral-400">Direct Email</div>
-                    <div className="text-xs sm:text-sm font-semibold text-white">
-                      marga.yanos.biz@gmail.com
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] text-pink-300 font-bold bg-pink-500/10 px-2 py-1 rounded-md">
-                  {copiedNotification ? 'Copied!' : 'Copy'}
-                </span>
-              </div>
-
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors flex items-center gap-3"
-              >
-                <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                  <Linkedin size={18} />
-                </div>
-                <div>
-                  <div className="text-xs text-neutral-400">LinkedIn Profile</div>
-                  <div className="text-xs sm:text-sm font-semibold text-white">linkedin.com/in/marga-yanos</div>
-                </div>
-              </a>
-
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors flex items-center gap-3"
-              >
-                <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
-                  <Instagram size={18} />
-                </div>
-                <div>
-                  <div className="text-xs text-neutral-400">Instagram DM</div>
-                  <div className="text-xs sm:text-sm font-semibold text-white">@marga.socials</div>
-                </div>
-              </a>
-            </div>
-
-            <div className="pt-4 border-t border-white/10 space-y-2 text-xs text-neutral-300">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 size={14} className="text-emerald-400" />
-                <span>NDA & Client Confidentiality signed standard</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 size={14} className="text-emerald-400" />
-                <span>Response guaranteed within 24 hours</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="lg:col-span-7">
-          <div className="bg-neutral-900/70 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl">
-            {formSubmitted ? (
-              <div className="text-center py-12 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30">
-                  <Check size={32} />
-                </div>
-                <h3 className="text-2xl font-black text-white">Discovery Request Received!</h3>
-                <p className="text-neutral-300 text-xs sm:text-sm max-w-md mx-auto">
-                  Thank you, <strong className="text-white">{formData.name}</strong>. Marga has received your details and will send a calendar confirmation within 12 hours.
-                </p>
-                <button
-                  onClick={() => {
-                    playTactilePop(500);
-                    setFormSubmitted(false);
-                  }}
-                  className="px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors"
-                >
-                  Send Another Inquiry
-                </button>
-              </div>
-            ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  triggerConfetti();
-                  setFormSubmitted(true);
-                }}
-                className="space-y-4"
-              >
-                <h3 className="text-lg font-bold text-white mb-2">Tell Me About Your Goals</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-semibold text-neutral-300 block mb-1">Your Full Name *</label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="e.g. Sarah Jenkins"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-neutral-950/80 border border-white/10 focus:border-pink-500 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white outline-none transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-semibold text-neutral-300 block mb-1">Business Email *</label>
-                    <input
-                      required
-                      type="email"
-                      placeholder="sarah@yourbrand.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-neutral-950/80 border border-white/10 focus:border-pink-500 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-semibold text-neutral-300 block mb-1">Service Desired</label>
-                    <select
-                      value={formData.serviceNeeded}
-                      onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
-                      className="w-full bg-neutral-950/80 border border-white/10 focus:border-pink-500 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-neutral-200 outline-none"
-                    >
-                      <option>Social Media Management</option>
-                      <option>Executive Virtual Assistant Retainer</option>
-                      <option>Combined Growth + Ops Suite</option>
-                      <option>Short-Form Video Production Sprint</option>
-                      <option>Notion SOP / Workspace Setup</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-xs font-semibold text-neutral-300 block mb-1">Estimated Budget</label>
-                    <input
-                      type="text"
-                      value={formData.monthlyBudget}
-                      onChange={(e) => setFormData({ ...formData, monthlyBudget: e.target.value })}
-                      className="w-full bg-neutral-950/80 border border-white/10 focus:border-pink-500 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-xs font-semibold text-neutral-300 block mb-1">Preferred Discovery Date</label>
-                  <input
-                    type="date"
-                    value={formData.discoveryDate}
-                    onChange={(e) => setFormData({ ...formData, discoveryDate: e.target.value })}
-                    className="w-full bg-neutral-950/80 border border-white/10 focus:border-pink-500 rounded-xl px-4 py-2 text-xs sm:text-sm text-neutral-300 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-semibold text-neutral-300 block mb-1">What is your biggest operational or social bottleneck right now?</label>
-                  <textarea
-                    rows={4}
-                    placeholder="Tell me about your current follower counts, weekly hours lost, or upcoming product launch goals..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-neutral-950/80 border border-white/10 focus:border-pink-500 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white outline-none resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white font-extrabold text-sm shadow-xl shadow-pink-500/25 active:scale-95 transition-all flex items-center justify-center gap-2"
-                >
-                  <Send size={16} />
-                  <span>Send Discovery Request</span>
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderCaseStudyModal = () => {
-    if (!selectedCaseStudy) return null;
-    return (
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-        <div className="relative w-full max-w-3xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-neutral-900 border border-white/20 p-6 sm:p-8 space-y-6 shadow-2xl">
-          <button
-            onClick={() => {
-              playTactilePop(500);
-              setSelectedCaseStudy(null);
-            }}
-            className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 transition-colors"
-          >
-            <X size={18} />
-          </button>
-          <div className="space-y-2">
-            <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">
-              {selectedCaseStudy.category} • {selectedCaseStudy.period}
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-black text-white">{selectedCaseStudy.title}</h3>
-            <p className="text-xs sm:text-sm text-rose-300 font-semibold">{selectedCaseStudy.client}</p>
-          </div>
-          <div className="rounded-2xl overflow-hidden border border-white/10 h-60">
-            <img
-              src={selectedCaseStudy.highlightImage}
-              alt={selectedCaseStudy.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {selectedCaseStudy.stats.map((s, idx) => (
-              <div key={idx} className="bg-neutral-950 p-3 rounded-xl border border-white/5 text-center">
-                <div className="text-[10px] text-neutral-400">{s.label}</div>
-                <div className="text-base font-black text-white mt-0.5">{s.val}</div>
-                <div className="text-[10px] text-emerald-400 font-bold">{s.delta}</div>
-              </div>
-            ))}
-          </div>
-          <div className="space-y-2">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">The Strategic Challenge & Approach</h4>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">{selectedCaseStudy.overview}</p>
-          </div>
-          <div className="space-y-2">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Specific Assets & Workflows Built</h4>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {selectedCaseStudy.deliverables.map((item, idx) => (
-                <li key={idx} className="text-xs text-neutral-200 bg-white/5 p-2.5 rounded-xl border border-white/5 flex items-start gap-2">
-                  <CheckCircle2 size={14} className="text-emerald-400 shrink-0 mt-0.5" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="pt-4 border-t border-white/10 flex justify-end gap-3">
-            <button
-              onClick={() => setSelectedCaseStudy(null)}
-              className="px-5 py-2.5 rounded-full bg-white/10 text-white font-bold text-xs"
-            >
-              Close
-            </button>
-            <button
-              onClick={() => {
-                setSelectedCaseStudy(null);
-                setCurrentTab('contact');
-              }}
-              className="px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs shadow-lg"
-            >
-              Discuss Similar Results
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderAestheticModal = () => {
-    if (!selectedAestheticPost) return null;
-    return (
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-        <div className="relative w-full max-w-2xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-neutral-900 border border-white/20 p-6 sm:p-8 space-y-6 shadow-2xl">
-          <button
-            onClick={() => {
-              playTactilePop(500);
-              setSelectedAestheticPost(null);
-            }}
-            className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300"
-          >
-            <X size={18} />
-          </button>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center font-bold text-xs">
-              MY
-            </div>
-            <div>
-              <h4 className="text-white font-bold text-sm">@marga.socials</h4>
-              <p className="text-[11px] text-pink-300 font-mono">Curated Asset Blueprint</p>
-            </div>
-          </div>
-          <div className="rounded-2xl overflow-hidden border border-white/10 aspect-[4/5] max-h-80 mx-auto">
-            <img
-              src={selectedAestheticPost.image}
-              alt={selectedAestheticPost.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="space-y-3">
-            <h3 className="text-xl font-black text-white">{selectedAestheticPost.title}</h3>
-            <div className="flex gap-4 text-xs font-bold text-pink-400">
-              <span>👁️ {selectedAestheticPost.views} Impressions</span>
-              <span>❤️ {selectedAestheticPost.likes} Saves & Likes</span>
-            </div>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed bg-neutral-950/60 p-4 rounded-xl border border-white/5">
-              {selectedAestheticPost.caption}
-            </p>
-          </div>
-          <button
-            onClick={() => {
-              setSelectedAestheticPost(null);
-              setCurrentTab('contact');
-            }}
-            className="w-full py-3.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs"
-          >
-            Get Custom Content Strategy for Your Brand
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  const renderResumeModal = () => {
-    if (!showResumeModal) return null;
-    return (
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-        <div className="relative w-full max-w-3xl max-h-[88vh] sm:max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-neutral-900 border border-white/20 p-6 sm:p-10 space-y-6 text-neutral-100 shadow-2xl">
-          <button
-            onClick={() => {
-              playTactilePop(500);
-              setShowResumeModal(false);
-            }}
-            className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300"
-          >
-            <X size={18} />
-          </button>
-          <div className="border-b border-white/15 pb-6 space-y-2">
-            <h2 className="text-3xl font-black text-white">MARGA YANOS</h2>
-            <p className="text-sm font-bold text-pink-400">
-              SENIOR SOCIAL MEDIA STRATEGIST & EXECUTIVE VIRTUAL ASSISTANT
-            </p>
-            <div className="flex flex-wrap gap-4 text-xs text-neutral-400 pt-1">
-              <span>📧 marga.yanos.biz@gmail.com</span>
-              <span>📍 Remote (Global Clients)</span>
-              <span>🌐 Portfolio: margayanos.io</span>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <h4 className="text-xs font-bold text-amber-400 uppercase tracking-widest">Executive Profile</h4>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-              Results-oriented Social Media Manager and Executive Operations VA with 5+ years of experience steering digital visibility, content pipeline architecture, and high-stakes calendar/inbox coordination. Proven track record generating over 10M organic impressions and restoring 20+ hours per week for high-growth founders.
-            </p>
-          </div>
-          <div className="space-y-4">
-            <h4 className="text-xs font-bold text-pink-400 uppercase tracking-widest">Experience History</h4>
-            {EXPERIENCE_TIMELINE.map((item, idx) => (
-              <div key={idx} className="space-y-1 text-xs">
-                <div className="flex justify-between font-bold text-white text-sm">
-                  <span>{item.role} — {item.company}</span>
-                  <span className="text-pink-300 font-mono">{item.year}</span>
-                </div>
-                <div className="text-neutral-400 italic mb-1">{item.summary}</div>
-                <ul className="list-disc list-inside space-y-1 text-neutral-300 pl-2">
-                  {item.achievements.map((ach, aIdx) => (
-                    <li key={aIdx}>{ach}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="pt-4 border-t border-white/10 flex justify-between items-center">
-            <span className="text-xs text-neutral-400">Status: Immediate Retainer Availability</span>
-            <button
-              onClick={() => {
-                playTactilePop(600);
-                window.print();
-              }}
-              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg"
-            >
-              <Download size={14} />
-              <span>Print / Save as PDF</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderFAB = () => (
-    <div className="fixed bottom-20 md:bottom-8 right-5 z-40">
-      {fabOpen && (
-        <div className="mb-3 space-y-2 animate-fadeIn">
-          <button
-            onClick={() => {
-              playTactilePop(550);
-              handleCopyEmail();
-              setFabOpen(false);
-            }}
-            className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-neutral-900 border border-white/20 text-white text-xs font-bold shadow-xl hover:bg-neutral-800 transition-all"
-          >
-            <Mail size={15} className="text-pink-400" />
-            <span>Copy Direct Email</span>
-          </button>
-          <button
-            onClick={() => {
-              triggerConfetti();
-              setCurrentTab('contact');
-              setFabOpen(false);
-            }}
-            className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold shadow-xl hover:brightness-110 transition-all"
-          >
-            <PhoneCall size={15} />
-            <span>Book Discovery Call</span>
-          </button>
-        </div>
-      )}
-      <button
-        onClick={() => {
-          playTactilePop(650);
-          setFabOpen(!fabOpen);
-        }}
-        className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white p-3.5 shadow-2xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center"
-        aria-label="Quick Connect"
-      >
-        {fabOpen ? <X size={24} /> : <MessageCircle size={24} />}
-      </button>
-    </div>
-  );
-
-  const renderMobileBottomDock = () => (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-neutral-950/90 backdrop-blur-2xl border-t border-white/10 px-2 py-2 flex items-center justify-around">
-      {[
-        { id: 'home', label: 'Home', icon: Sparkles },
-        { id: 'portfolio', label: 'Work', icon: Eye },
-        { id: 'feed', label: 'Feed', icon: Smartphone },
-        { id: 'deliverables', label: 'Vault', icon: FileText },
-        { id: 'contact', label: 'Book', icon: Calendar }
-      ].map((item) => {
-        const IconComp = item.icon;
-        const isActive = currentTab === item.id;
-        return (
-          <button
-            key={item.id}
-            onClick={() => {
-              playTactilePop(520);
-              setCurrentTab(item.id);
-            }}
-            className={`flex flex-col items-center gap-1 p-2 rounded-2xl transition-all ${
-              isActive ? 'text-pink-400 font-bold scale-105' : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            <IconComp size={18} />
-            <span className="text-[10px]">{item.label}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen text-white bg-neutral-950 font-sans selection:bg-pink-500 selection:text-white relative overflow-x-hidden pb-16 lg:pb-0">
-      {/* Dynamic Ambient Background Blobs */}
-      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-        <div className={`absolute -top-32 -left-32 w-[550px] h-[550px] rounded-full blur-[130px] opacity-40 ${activeTheme.blob1}`} />
-        <div className={`absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-35 ${activeTheme.blob2}`} />
-        <div className={`absolute -bottom-32 left-1/3 w-[600px] h-[600px] rounded-full blur-[150px] opacity-30 ${activeTheme.blob3}`} />
-      </div>
-
-      {/* Confetti celebration alert */}
-      {confettiActive && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400 text-white font-black text-xs px-6 py-2.5 rounded-full shadow-2xl animate-bounce flex items-center gap-2">
-          <Sparkles size={16} />
-          <span>✨ Action Triggered! Let’s create magic together.</span>
-        </div>
-      )}
-
-      {/* Main Top Navigation */}
-      {renderNav()}
-
-      {/* Page Routing Switcher */}
-      <main className="relative z-10">
-        {currentTab === 'home' && renderHome()}
-        {currentTab === 'resume' && renderResume()}
-        {currentTab === 'portfolio' && renderPortfolio()}
-        {currentTab === 'feed' && renderAestheticFeed()}
-        {currentTab === 'deliverables' && renderDeliverablesVault()}
-        {currentTab === 'services' && renderServices()}
-        {currentTab === 'calculator' && renderCalculator()}
-        {currentTab === 'faq' && renderFAQ()}
-        {currentTab === 'contact' && renderContact()}
-      </main>
-
-      {/* Floating Action Button */}
-      {renderFAB()}
-
-      {/* Mobile Sticky Bottom Dock */}
-      {renderMobileBottomDock()}
-
-      {/* Modals */}
-      {renderCaseStudyModal()}
-      {renderAestheticModal()}
-      {renderResumeModal()}
-
-      {/* Global Interactive Footer */}
-      <footer className="border-t border-white/10 bg-neutral-950/80 backdrop-blur-xl py-12 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-amber-400 p-[2px]">
-              <div className="w-full h-full bg-neutral-950 rounded-[10px] flex items-center justify-center font-extrabold text-pink-400 text-sm">
-                MY
-              </div>
-            </div>
-            <div>
-              <div className="font-bold text-white text-sm">Marga Yanos</div>
-              <div className="text-xs text-neutral-400">Social Media Strategist & High-Impact Virtual Assistant</div>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4 text-xs text-neutral-400">
-            <button onClick={() => { playTactilePop(520); setCurrentTab('home'); }} className="hover:text-white transition-colors">Overview</button>
-            <button onClick={() => { playTactilePop(520); setCurrentTab('resume'); }} className="hover:text-white transition-colors">Resume</button>
-            <button onClick={() => { playTactilePop(520); setCurrentTab('portfolio'); }} className="hover:text-white transition-colors">Case Studies</button>
-            <button onClick={() => { playTactilePop(520); setCurrentTab('feed'); }} className="hover:text-white transition-colors">Aesthetic Feed</button>
-            <button onClick={() => { playTactilePop(520); setCurrentTab('deliverables'); }} className="hover:text-white transition-colors">Vault</button>
-            <button onClick={() => { playTactilePop(520); setCurrentTab('services'); }} className="hover:text-white transition-colors">Rates</button>
-            <button onClick={() => { playTactilePop(520); setCurrentTab('faq'); }} className="hover:text-white transition-colors">FAQs</button>
-            <button onClick={() => { playTactilePop(520); setCurrentTab('contact'); }} className="hover:text-white transition-colors">Contact</button>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleCopyEmail}
-              className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition-colors"
-              title="Copy Email"
-            >
-              <Mail size={16} />
-            </button>
-            <button
-              onClick={() => {
-                triggerConfetti();
-                setCurrentTab('contact');
-              }}
-              className="px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs shadow-md"
-            >
-              Let’s Talk
-            </button>
-          </div>
-        </div>
-        <div className="text-center text-[11px] text-neutral-500 mt-8">
-          © {new Date().getFullYear()} Marga Yanos. Crafted with high-vibe creative design & conversion strategy.
-        </div>
-      </footer>
-    </div>
-  );
-}
+        // --- Form Submission ---
+        function submitForm(e) {
+            e.preventDefault();
+            document.getElementById('contactForm').classList.add('hidden');
+            document.getElementById('contactSuccess').classList.remove('hidden');
+            showToast('Form successfully submitted!');
+            playPop();
+        }
+    </script>
+</body>
+</html>
